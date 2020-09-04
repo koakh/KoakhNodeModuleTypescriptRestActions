@@ -17,8 +17,6 @@ export class GenericActions {
   // combined version of local genericEventActionMap, and all actions for current socketClientType
   private genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>();
 
-  constructor() { }
-
   /**
    * processAction, this function will work with all implemented generic function actions,
    * receive action, payload and socket server callback
@@ -66,6 +64,7 @@ export class GenericActions {
   }
 
   private initGenericEventActionMapAll() {
+    debugger;
     // declare local action, the ACTION_ACTION_LIST must be implemented here to access the final genericEventActionMapAll object in actionList
     const genericEventActionMap = new Map<GenericEventAction, GenericEventActionMapObject>([
       [GenericEventAction.ACTION_ACTION_LIST, {

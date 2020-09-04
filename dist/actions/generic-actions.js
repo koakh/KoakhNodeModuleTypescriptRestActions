@@ -152,6 +152,7 @@ class GenericActions {
         }
     }
     initGenericEventActionMapAll() {
+        debugger;
         // declare local action, the ACTION_ACTION_LIST must be implemented here to access the final genericEventActionMapAll object in actionList
         const genericEventActionMap = new Map([
             [types_1.GenericEventAction.ACTION_ACTION_LIST, {

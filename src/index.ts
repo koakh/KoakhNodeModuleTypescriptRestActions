@@ -1,2 +1,2 @@
-export * from './util/main';
-export * from './actions/generic-actions'
+export { GenericEventAction } from './types';
+export { GenericActions } from './actions/generic-actions'

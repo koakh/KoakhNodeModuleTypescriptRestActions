@@ -1,15 +1,8 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./util/main"), exports);
-__exportStar(require("./actions/generic-actions"), exports);
+exports.GenericActions = exports.GenericEventAction = void 0;
+var types_1 = require("./types");
+Object.defineProperty(exports, "GenericEventAction", { enumerable: true, get: function () { return types_1.GenericEventAction; } });
+var generic_actions_1 = require("./actions/generic-actions");
+Object.defineProperty(exports, "GenericActions", { enumerable: true, get: function () { return generic_actions_1.GenericActions; } });
 //# sourceMappingURL=index.js.map
