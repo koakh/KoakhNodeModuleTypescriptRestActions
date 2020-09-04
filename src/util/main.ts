@@ -66,24 +66,6 @@ export const listsAreEqual = (list1, list2) => {
   return true;
 };
 
-// TODO remove
-// /**
-//  * Execute a shell command
-//  * @param cmd {string}
-//  * @return {Promise<string>}
-//  */
-// export const execShellCommand = (cmd) => {
-//   return new Promise((resolve, reject) => {
-//     exec(cmd, (error, stdout, stderr) => {
-//       if (error) {
-//         reject(new Error(`cmd "${cmd}" failed - ${error}`));
-//       } else {
-//         resolve(stdout ? stdout : stderr);
-//       }
-//     });
-//   });
-// };
-
 // declare asyncForEach to work with forEach with async/await
 export const asyncForEach = async (array: any, callback: any) => {
   for (let index = 0; index < array.length; index++) {

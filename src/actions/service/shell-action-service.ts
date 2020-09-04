@@ -54,21 +54,21 @@ export class ShellActionService extends ActionBaseClass {
   //     }
   //   })
   // };
-
+  
+  // TODO is used?
   /**
    * helper to get error message from execShPromise
    */
-  // TODO is used?
-  private getExecShErrorMessage(error) {
-    // send error callback
-    if (error.stderr) {
-      return error.stderr;
-    } else if (error.message) {
-      return error.message;
-    } else {
-      return error;
-    }
-  }
+  // private getExecShErrorMessage(error) {
+  //   // send error callback
+  //   if (error.stderr) {
+  //     return error.stderr;
+  //   } else if (error.message) {
+  //     return error.message;
+  //   } else {
+  //     return error;
+  //   }
+  // }
 
   /**
    * ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC
@@ -86,5 +86,4 @@ export class ShellActionService extends ActionBaseClass {
       }
     })
   };
-
 }

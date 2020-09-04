@@ -16,6 +16,33 @@ const action_base_class_1 = require("../base/action-base-class");
 class ShellActionService extends action_base_class_1.ActionBaseClass {
     constructor() {
         super();
+        // TODO is used?
+        // private execShell = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecShellCommandResponse> => {
+        //   return new Promise(async (resolve, reject) => {
+        //     try {
+        //       const res: ExecShellCommandResponse = await execShellCommand(cmd, args, cwd, showLog);
+        //       // resolve promise
+        //       resolve(res);
+        //     } catch (error) {
+        //       // reject promise
+        //       reject(error);
+        //     }
+        //   })
+        // };
+        // TODO is used?
+        /**
+         * helper to get error message from execShPromise
+         */
+        // private getExecShErrorMessage(error) {
+        //   // send error callback
+        //   if (error.stderr) {
+        //     return error.stderr;
+        //   } else if (error.message) {
+        //     return error.message;
+        //   } else {
+        //     return error;
+        //   }
+        // }
         /**
          * ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC
          */
@@ -65,35 +92,6 @@ class ShellActionService extends action_base_class_1.ActionBaseClass {
     initGenericEventActionMapAll() {
         // combine all local module actions
         this.combineActions();
-    }
-    // TODO is used?
-    // private execShell = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecShellCommandResponse> => {
-    //   return new Promise(async (resolve, reject) => {
-    //     try {
-    //       const res: ExecShellCommandResponse = await execShellCommand(cmd, args, cwd, showLog);
-    //       // resolve promise
-    //       resolve(res);
-    //     } catch (error) {
-    //       // reject promise
-    //       reject(error);
-    //     }
-    //   })
-    // };
-    /**
-     * helper to get error message from execShPromise
-     */
-    // TODO is used?
-    getExecShErrorMessage(error) {
-        // send error callback
-        if (error.stderr) {
-            return error.stderr;
-        }
-        else if (error.message) {
-            return error.message;
-        }
-        else {
-            return error;
-        }
     }
 }
 exports.ShellActionService = ShellActionService;
