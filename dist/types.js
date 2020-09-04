@@ -2,9 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenericEventActionParameterType = exports.GenericEventAction = void 0;
 /**
- * This actions will use SocketEvent.CLIENT_CHANNEL
- * GenericEventAction enum is duplicated in server and all clients
- * but each server|client has its own specific enums that are implemented
+ * GenericEventAction enums
  */
 var GenericEventAction;
 (function (GenericEventAction) {

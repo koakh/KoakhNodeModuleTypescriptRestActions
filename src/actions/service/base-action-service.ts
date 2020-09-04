@@ -5,8 +5,9 @@
 import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 import { ActionBaseClass } from '../base/action-base-class';
 import { NOT_IMPLEMENTED } from '../generic-actions';
+import { ShellActionService } from './shell-action-service';
 
-export class GenericActionsBaseService extends ActionBaseClass {
+export class BaseActionService extends ActionBaseClass {
 
   constructor(
     private getGenericEventActionKey
@@ -39,6 +40,9 @@ export class GenericActionsBaseService extends ActionBaseClass {
 
   // init local module actions into final module genericEventActionMapAll
   public initGenericEventActionMapAll() {
+    // ShellService: service component actions: push SocketGenericActionsShellService service component
+    const actionsShell: ShellActionService = new ShellActionService();
+    this.genericEventActionMapArray.push(actionsShell.getActions());
     // combine all local module actions
     this.combineActions();
   }

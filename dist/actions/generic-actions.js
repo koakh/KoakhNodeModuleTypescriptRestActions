@@ -13,7 +13,7 @@ exports.GenericActions = exports.MISSING_BODY = exports.MISSING_PARAMETERS = exp
 // tslint:disable-next-line: max-line-length
 const types_1 = require("../types");
 const main_1 = require("../util/main");
-const generic_actions_base_service_1 = require("./service/generic-actions-base-service");
+const base_action_service_1 = require("./service/base-action-service");
 exports.NOT_IMPLEMENTED = 'current action is registered, but is not implemented! please implement a valid GenericEventActionFunction for it';
 exports.MISSING_PARAMETERS = 'missing query parameter(s)';
 exports.MISSING_BODY = 'missing payload body';
@@ -24,7 +24,7 @@ class GenericActions {
     constructor() {
         // array of action map to combine into final genericEventActionMapAll
         this.genericEventActionMapArray = [];
-        // combined version of local genericEventActionMap, and all actions for current socketClientType
+        // combined version of local genericEventActionMap, and all actions for current clientType
         this.genericEventActionMapAll = new Map();
         /**
          * check if is a valid GenericEventAction and is is implemented in genericEventActionMap
@@ -113,11 +113,8 @@ class GenericActions {
         this.initGenericEventActionMapAll();
     }
     /**
-     * processAction, this function will work with all implemented generic function actions,
-     * receive action, payload and socket server callback
-     * and send acknowledge response to socket server using the magic callback stuff (I like it too)
+     * processAction, this function will work with all implemented generic function actions, receive action and payload
      * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
-     * @param callback socket server callback
      */
     processAction(action, payload) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -177,7 +174,7 @@ class GenericActions {
         // common actions for all clients: push local genericEventActionMap
         this.genericEventActionMapArray.push(genericEventActionMap);
         // common actions for all clients: push SocketGenericActionsBaseService service component
-        const actionsBase = new generic_actions_base_service_1.GenericActionsBaseService(this.getGenericEventActionKey);
+        const actionsBase = new base_action_service_1.BaseActionService(this.getGenericEventActionKey);
         this.genericEventActionMapArray.push(actionsBase.getActions());
         // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used
         // and finish the combination of local, common, and specific clientTypes actions

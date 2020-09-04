@@ -1,7 +1,5 @@
 /**
- * This actions will use SocketEvent.CLIENT_CHANNEL
- * GenericEventAction enum is duplicated in server and all clients
- * but each server|client has its own specific enums that are implemented
+ * GenericEventAction enums
  */
 export enum GenericEventAction {
   // core actions
@@ -28,8 +26,6 @@ export enum GenericEventActionParameterType {
 }
 
 // define function type
-// TODO: remove
-// export type GenericEventActionCallbackFunction = (error: any, response: any) => void;
 export type GenericEventActionFunction = (payload: any) => Promise<any>;
 export interface GenericEventActionPayload {
   query?: { [key: string]: string };

@@ -2,7 +2,7 @@ import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayl
 import { execScript, ExecScriptResponse } from '../../util';
 import { ActionBaseClass } from '../base/action-base-class';
 
-export class GenericActionsShellService extends ActionBaseClass {
+export class ShellActionService extends ActionBaseClass {
   constructor() {
     super();
     this.initGenericEvenActionMap();
@@ -24,10 +24,11 @@ export class GenericActionsShellService extends ActionBaseClass {
             singleCommand: {
               body: 'sudo service backend status'
             },
+            // TODO multiple commands work?
             multipleCommands: {
               body: [
-                'sudo service openvpn status',
-                'sudo service sshd status'
+                'service openvpn status',
+                'service sshd status'
               ]
             }
           },
@@ -58,6 +59,7 @@ export class GenericActionsShellService extends ActionBaseClass {
   /**
    * helper to get error message from execShPromise
    */
+  // TODO is used?
   private getExecShErrorMessage(error) {
     // send error callback
     if (error.stderr) {

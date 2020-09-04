@@ -1,7 +1,7 @@
 // tslint:disable-next-line: max-line-length
 import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
 import { getEnumKeyFromEnumValue } from '../util/main';
-import { GenericActionsBaseService } from './service/generic-actions-base-service';
+import { BaseActionService } from './service/base-action-service';
 
 export const NOT_IMPLEMENTED: string = 'current action is registered, but is not implemented! please implement a valid GenericEventActionFunction for it';
 export const MISSING_PARAMETERS: string = 'missing query parameter(s)';
@@ -14,7 +14,7 @@ export const MISSING_BODY: string = 'missing payload body';
 export class GenericActions {
   // array of action map to combine into final genericEventActionMapAll
   private genericEventActionMapArray: Map<GenericEventAction, GenericEventActionMapObject>[] = [];
-  // combined version of local genericEventActionMap, and all actions for current socketClientType
+  // combined version of local genericEventActionMap, and all actions for current clientType
   private genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>();
 
   constructor()  {
@@ -23,11 +23,8 @@ export class GenericActions {
   }
 
   /**
-   * processAction, this function will work with all implemented generic function actions,
-   * receive action, payload and socket server callback
-   * and send acknowledge response to socket server using the magic callback stuff (I like it too)
+   * processAction, this function will work with all implemented generic function actions, receive action and payload
    * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
-   * @param callback socket server callback
    */
   public processAction(action: string, payload?: GenericEventActionPayload): Promise<any> {
     return new Promise(async (resolve, reject) => {
@@ -86,7 +83,7 @@ export class GenericActions {
     this.genericEventActionMapArray.push(genericEventActionMap);
 
     // common actions for all clients: push SocketGenericActionsBaseService service component
-    const actionsBase: GenericActionsBaseService = new GenericActionsBaseService(this.getGenericEventActionKey);
+    const actionsBase: BaseActionService = new BaseActionService(this.getGenericEventActionKey);
     this.genericEventActionMapArray.push(actionsBase.getActions());
 
     // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used

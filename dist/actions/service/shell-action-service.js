@@ -9,11 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GenericActionsShellService = void 0;
+exports.ShellActionService = void 0;
 const types_1 = require("../../types");
 const util_1 = require("../../util");
 const action_base_class_1 = require("../base/action-base-class");
-class GenericActionsShellService extends action_base_class_1.ActionBaseClass {
+class ShellActionService extends action_base_class_1.ActionBaseClass {
     constructor() {
         super();
         this.execShell = (cmd, args = [], cwd = null, showLog = false) => {
@@ -83,6 +83,7 @@ class GenericActionsShellService extends action_base_class_1.ActionBaseClass {
     /**
      * helper to get error message from execShPromise
      */
+    // TODO is used?
     getExecShErrorMessage(error) {
         // send error callback
         if (error.stderr) {
@@ -96,5 +97,5 @@ class GenericActionsShellService extends action_base_class_1.ActionBaseClass {
         }
     }
 }
-exports.GenericActionsShellService = GenericActionsShellService;
-//# sourceMappingURL=shell.js.map
+exports.ShellActionService = ShellActionService;
+//# sourceMappingURL=shell-action-service.js.map

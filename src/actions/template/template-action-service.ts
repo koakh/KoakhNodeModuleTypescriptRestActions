@@ -6,7 +6,7 @@ import { NOT_IMPLEMENTED } from '../generic-actions';
  * serve has a base template for clientType actions actions/client-type/* and service actions actions/service/*
  */
 
-export class TemplateGenericActions extends ActionBaseClass {
+export class TemplateActionService extends ActionBaseClass {
 
   constructor() {
     super();
