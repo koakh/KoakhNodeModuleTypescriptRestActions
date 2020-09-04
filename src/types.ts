@@ -28,7 +28,9 @@ export enum GenericEventActionParameterType {
 }
 
 // define function type
-export type GenericEventActionFunction = (payload: any) => any;
+// TODO: remove
+// export type GenericEventActionCallbackFunction = (error: any, response: any) => void;
+export type GenericEventActionFunction = (payload: any) => Promise<any>;
 export interface GenericEventActionPayload {
   query?: { [key: string]: string };
   body?: any;

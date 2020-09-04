@@ -1,5 +1,5 @@
 // tslint:disable-next-line: max-line-length
-import { GenericEventAction, GenericEventActionCallbackFunction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
+import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
 import { getEnumKeyFromEnumValue } from '../util/main';
 import { GenericActionsBaseService } from './service/generic-actions-base-service';
 
@@ -17,6 +17,11 @@ export class GenericActions {
   // combined version of local genericEventActionMap, and all actions for current socketClientType
   private genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>();
 
+  constructor()  {
+    // init actions
+    this.initGenericEventActionMapAll();
+  }
+
   /**
    * processAction, this function will work with all implemented generic function actions,
    * receive action, payload and socket server callback
@@ -24,7 +29,7 @@ export class GenericActions {
    * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
    * @param callback socket server callback
    */
-  private processAction(action: string, payload?: GenericEventActionPayload): Promise<any> {
+  public processAction(action: string, payload?: GenericEventActionPayload): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         // start getting GenericEventAction enum
@@ -50,13 +55,14 @@ export class GenericActions {
           if (actionFunction) {
             // call actionFunction implementation
             const result = await actionFunction(payload);
+            resolve(result);
           } else {
             // delegate to catch
             throw new Error(`invalid genericEventActionFunction implementation for action '${action}'`);
           }
         } else {
           // delegate to catch
-          throw new Error(`invalid or disabled action '${action}' or payload...please check if target action is implemented in client, or is not disabled`);
+          throw new Error(`invalid or disabled action '${action}' or payload...check if '${action}' is implemented and is enabled`);
         }
       } catch (error) {
         // always fire callback for server acknowledge
@@ -64,45 +70,6 @@ export class GenericActions {
       }
     })
   };
-
-  // public processAction(action: string, payload: GenericEventActionPayload, callback: GenericEventActionCallbackFunction): void {
-  //   try {
-  //     // start getting GenericEventAction enum
-  //     const genericEventAction: GenericEventAction = this.getGenericEventActionKey(action);
-  //     // get actionMapObject from genericEventActionMapAll
-  //     const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
-  //     if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
-  //       // get function implementation
-  //       const actionFunction: GenericEventActionFunction = actionMapObject.func;
-  //       // get parameters
-  //       const parameters: Map<string, GenericEventActionParameter> | null = actionMapObject.parameters;
-  //       // validate parameters, if action has parameters defined
-  //       if (parameters) {
-  //         this.validateParameters(payload, parameters, callback);
-  //       }
-  //       // validate body, check if has body is a required property, and if payload has body property
-  //       if ((actionMapObject && actionMapObject.body && actionMapObject.body.required) && (!payload || (payload && !payload.body))) {
-  //         // delegate to catch
-  //         const bodyExample: string = (actionMapObject.body.example) ? `. ex.: { body: ${actionMapObject.body.example} }` : '.';
-  //         throw new Error(`${MISSING_BODY}${bodyExample}`);
-  //       }
-  //       // fire actionFunction if pass validateParameters, and validateBody
-  //       if (actionFunction) {
-  //         // call actionFunction implementation
-  //         actionFunction(payload, callback);
-  //       } else {
-  //         // delegate to catch
-  //         throw new Error(`invalid genericEventActionFunction implementation for action '${action}'`);
-  //       }
-  //     } else {
-  //       // delegate to catch
-  //       throw new Error(`invalid or disabled action '${action}' or payload...please check if target action is implemented in client, or is not disabled`);
-  //     }
-  //   } catch (error) {
-  //     // always fire callback for server acknowledge
-  //     callback(error.message, null);
-  //   }
-  // }
 
   private initGenericEventActionMapAll() {
     // declare local action, the ACTION_ACTION_LIST must be implemented here to access the final genericEventActionMapAll object in actionList
