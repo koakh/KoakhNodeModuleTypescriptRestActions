@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.execScript = void 0;
+exports.execShellCommand = void 0;
 const child_process_1 = require("child_process");
 /**
  * exec shell Script helper function
@@ -9,7 +9,7 @@ const child_process_1 = require("child_process");
  * @param {*} cwd ex.: /var/lib/c3apps/folderId
  * @param {*} showLog
  */
-exports.execScript = (cmd, args = [], cwd = null, showLog = false) => new Promise((resolve, reject) => {
+exports.execShellCommand = (cmd, args = [], cwd = null, showLog = false) => new Promise((resolve, reject) => {
     try {
         const child = child_process_1.spawn(cmd, args, { cwd });
         child.stdin.setDefaultEncoding('utf-8');

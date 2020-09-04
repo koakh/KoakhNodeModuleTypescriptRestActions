@@ -16,19 +16,6 @@ const action_base_class_1 = require("../base/action-base-class");
 class ShellActionService extends action_base_class_1.ActionBaseClass {
     constructor() {
         super();
-        this.execShell = (cmd, args = [], cwd = null, showLog = false) => {
-            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                try {
-                    const res = yield util_1.execScript(cmd, args, cwd, showLog);
-                    // resolve promise
-                    resolve(res);
-                }
-                catch (error) {
-                    // reject promise
-                    reject(error);
-                }
-            }));
-        };
         /**
          * ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC
          */
@@ -36,7 +23,7 @@ class ShellActionService extends action_base_class_1.ActionBaseClass {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     const { cmd, args, cwd, showLog } = payload.body;
-                    const res = yield util_1.execScript(cmd, args, cwd, showLog);
+                    const res = yield util_1.execShellCommand(cmd, args, cwd, showLog);
                     // resolve promise
                     resolve(res);
                 }
@@ -58,18 +45,17 @@ class ShellActionService extends action_base_class_1.ActionBaseClass {
                     link: 'https://www.npmjs.com/package/exec-sh#public-api',
                     body: {
                         required: true,
-                        description: 'body can be a command or an array of commands',
-                        // TODO change example
+                        description: 'require a body with command payload',
                         example: {
+                            // TODO implement array of multiple commands
                             singleCommand: {
-                                body: 'sudo service backend status'
+                                body: {
+                                    cmd: 'service',
+                                    args: ['sshd', 'status'],
+                                    cwd: '/tmp',
+                                    showLog: false,
+                                },
                             },
-                            multipleCommands: {
-                                body: [
-                                    'sudo service openvpn status',
-                                    'sudo service sshd status'
-                                ]
-                            }
                         },
                     }
                 }],
@@ -80,6 +66,19 @@ class ShellActionService extends action_base_class_1.ActionBaseClass {
         // combine all local module actions
         this.combineActions();
     }
+    // TODO is used?
+    // private execShell = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecShellCommandResponse> => {
+    //   return new Promise(async (resolve, reject) => {
+    //     try {
+    //       const res: ExecShellCommandResponse = await execShellCommand(cmd, args, cwd, showLog);
+    //       // resolve promise
+    //       resolve(res);
+    //     } catch (error) {
+    //       // reject promise
+    //       reject(error);
+    //     }
+    //   })
+    // };
     /**
      * helper to get error message from execShPromise
      */

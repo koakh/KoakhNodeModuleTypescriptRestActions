@@ -31,6 +31,21 @@ export interface GenericEventActionPayload {
   query?: { [key: string]: string };
   body?: any;
 }
+
+export interface GenericShellExecCommandPayload {
+  body: {
+    cmd: string,
+    args: string[],
+    cwd?: string,
+    showLog?: boolean,
+  }
+}
+
+// TODO implement multiple commands
+// export interface GenericEventGenericShellExecPayload {
+//   body?: GenericShellExecCommand[],
+// }
+
 // query parameters
 export interface GenericEventActionParameter {
   description?: string;

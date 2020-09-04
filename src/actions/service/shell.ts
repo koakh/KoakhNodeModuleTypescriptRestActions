@@ -1,5 +1,5 @@
 import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
-import { execScript, ExecScriptResponse } from '../../util';
+import { execShellCommand, ExecShellCommandResponse } from '../../util';
 import { ActionBaseClass } from '../base/action-base-class';
 
 export class GenericActionsShellService extends ActionBaseClass {
@@ -42,10 +42,10 @@ export class GenericActionsShellService extends ActionBaseClass {
     this.combineActions();
   }
 
-  private execShell = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecScriptResponse> => {
+  private execShell = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecShellCommandResponse> => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res: ExecScriptResponse = await execScript(cmd, args, cwd, showLog);
+        const res: ExecShellCommandResponse = await execShellCommand(cmd, args, cwd, showLog);
         // resolve promise
         resolve(res);
       } catch (error) {
@@ -72,11 +72,11 @@ export class GenericActionsShellService extends ActionBaseClass {
   /**
    * ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC
    */
-  private genericEventActionShellGenericShellExec = (payload: GenericEventActionPayload): Promise<ExecScriptResponse> => {
+  private genericEventActionShellGenericShellExec = (payload: GenericEventActionPayload): Promise<ExecShellCommandResponse> => {
     return new Promise(async (resolve, reject) => {
       try {
         const {cmd, args, cwd, showLog} = payload.body;
-        const res: ExecScriptResponse = await execScript(cmd, args, cwd, showLog);
+        const res: ExecShellCommandResponse = await execShellCommand(cmd, args, cwd, showLog);
         // resolve promise
         resolve(res);
       } catch (error) {

@@ -1,2 +1,2 @@
-export { GenericEventAction, GenericEventActionPayload } from './types';
-export { GenericActions } from './actions/generic-actions'
+export { GenericActions } from './actions/generic-actions';
+export { GenericEventAction, GenericEventActionPayload, GenericShellExecCommandPayload } from './types';

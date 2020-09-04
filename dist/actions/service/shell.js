@@ -19,7 +19,7 @@ class GenericActionsShellService extends action_base_class_1.ActionBaseClass {
         this.execShell = (cmd, args = [], cwd = null, showLog = false) => {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
-                    const res = yield util_1.execScript(cmd, args, cwd, showLog);
+                    const res = yield util_1.execShellCommand(cmd, args, cwd, showLog);
                     // resolve promise
                     resolve(res);
                 }
@@ -36,7 +36,7 @@ class GenericActionsShellService extends action_base_class_1.ActionBaseClass {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     const { cmd, args, cwd, showLog } = payload.body;
-                    const res = yield util_1.execScript(cmd, args, cwd, showLog);
+                    const res = yield util_1.execShellCommand(cmd, args, cwd, showLog);
                     // resolve promise
                     resolve(res);
                 }

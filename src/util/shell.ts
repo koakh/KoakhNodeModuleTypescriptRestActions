@@ -1,6 +1,6 @@
 import { spawn, ChildProcessWithoutNullStreams } from "child_process";
 
-export interface ExecScriptResponse {
+export interface ExecShellCommandResponse {
   code?: number;
   stdout?: string[];
   stderr?: string[];
@@ -14,7 +14,7 @@ export interface ExecScriptResponse {
  * @param {*} cwd ex.: /var/lib/c3apps/folderId
  * @param {*} showLog 
  */
-export const execScript = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecScriptResponse> => new Promise((resolve, reject) => {
+export const execShellCommand = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecShellCommandResponse> => new Promise((resolve, reject) => {
   try {
     const child: ChildProcessWithoutNullStreams = spawn(cmd, args, { cwd });
     child.stdin.setDefaultEncoding('utf-8');
