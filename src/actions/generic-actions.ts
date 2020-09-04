@@ -1,5 +1,5 @@
 // tslint:disable-next-line: max-line-length
-import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
+import { GenericEventAction, GenericEventActionCallbackFunction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
 import { getEnumKeyFromEnumValue } from '../util/main';
 import { GenericActionsBaseService } from './service/generic-actions-base-service';
 
@@ -24,7 +24,7 @@ export class GenericActions {
    * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
    * @param callback socket server callback
    */
-  private processAction(action: string, payload: GenericEventActionPayload): Promise<any> {
+  private processAction(action: string, payload?: GenericEventActionPayload): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         // start getting GenericEventAction enum
@@ -65,7 +65,7 @@ export class GenericActions {
     })
   };
 
-  // public processAction(action: string, payload: GenericEventActionPayload): void {
+  // public processAction(action: string, payload: GenericEventActionPayload, callback: GenericEventActionCallbackFunction): void {
   //   try {
   //     // start getting GenericEventAction enum
   //     const genericEventAction: GenericEventAction = this.getGenericEventActionKey(action);
