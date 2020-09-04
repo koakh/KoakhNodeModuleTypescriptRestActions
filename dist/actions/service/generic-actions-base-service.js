@@ -14,51 +14,49 @@ class GenericActionsBaseService extends action_base_class_1.ActionBaseClass {
         /**
          * ACTION_CONSOLE_LOG
          */
-        this.genericEventActionConsoleLog = (payload, callback) => {
-            const { body: { message } } = payload;
-            try {
-                let result;
-                // execute action if message is defined, this way works with required and optional parameters
-                if (message) {
-                    result = 'message sent';
-                    console.log(message);
+        this.genericEventActionConsoleLog = (payload) => {
+            return new Promise((resolve, reject) => {
+                try {
+                    const { body: { message } } = payload;
+                    let result;
+                    // execute action if message is defined, this way works with required and optional parameters
+                    if (message) {
+                        result = 'message sent';
+                        console.log(message);
+                    }
+                    else {
+                        result = 'message received, but not logged to console because miss optional parameter \'message\'';
+                    }
+                    resolve({ message: result });
                 }
-                else {
-                    result = 'message received, but not logged to console because miss optional parameter \'message\'';
+                catch (error) {
+                    reject(error);
                 }
-                // response to server
-                if (callback) {
-                    callback(null, { message: result });
-                }
-            }
-            catch (error) {
-                if (callback) {
-                    callback(error, null);
-                }
-            }
+            });
         };
         /**
          * ACTION_ACK_OK
          */
-        this.genericEventActionAckOk = (payload, callback) => {
-            try {
-                // simulate some work...
-                setTimeout(() => {
-                    callback(null, { message: 'OK' });
-                }, 1000);
-            }
-            catch (error) {
-                callback(error, null);
-            }
+        this.genericEventActionAckOk = (payload) => {
+            return new Promise((resolve, reject) => {
+                try {
+                    resolve({ message: 'OK' });
+                }
+                catch (error) {
+                    reject(error);
+                }
+            });
         };
         /**
          * ACTION_ACK_KO
          */
-        this.genericEventActionAckKo = (payload, callback) => {
-            // simulate some work...
-            setTimeout(() => {
-                callback(generic_actions_1.NOT_IMPLEMENTED, null);
-            }, 2500);
+        this.genericEventActionAckKo = (payload) => {
+            return new Promise((reject) => {
+                // simulate some work...
+                setTimeout(() => {
+                    reject(new Error(generic_actions_1.NOT_IMPLEMENTED));
+                }, 2500);
+            });
         };
         this.initGenericEvenActionMap();
         this.initGenericEventActionMapAll();

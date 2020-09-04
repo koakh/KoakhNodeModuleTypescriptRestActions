@@ -8,9 +8,10 @@ class ActionBaseClass {
         this.genericEventActionMapArray = [];
         this.genericEventActionMapAll = new Map();
         // common function to test actions
-        this.genericEventActionNotImplemented = (payload, callback) => {
-            // always fire response back
-            callback(generic_actions_1.NOT_IMPLEMENTED, null);
+        this.genericEventActionNotImplemented = (payload) => {
+            return new Promise((reject) => {
+                reject(new Error(generic_actions_1.NOT_IMPLEMENTED));
+            });
         };
     }
     getActions() {

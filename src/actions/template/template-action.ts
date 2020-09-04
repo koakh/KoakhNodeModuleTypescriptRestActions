@@ -1,4 +1,4 @@
-import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload, GenericEventActionCallbackFunction } from '../../types';
+import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 import { ActionBaseClass } from '../base/action-base-class';
 import { NOT_IMPLEMENTED } from '../generic-actions';
 
@@ -6,7 +6,7 @@ import { NOT_IMPLEMENTED } from '../generic-actions';
  * serve has a base template for clientType actions actions/client-type/* and service actions actions/service/*
  */
 
-export class SocketGenericActionsCcSocketClient extends ActionBaseClass {
+export class TemplateGenericActions extends ActionBaseClass {
 
   constructor() {
     super();
@@ -33,9 +33,9 @@ export class SocketGenericActionsCcSocketClient extends ActionBaseClass {
   /**
    * ACTION_${SERVICE_NAME}_SERVICE_STUB
    */
-  private genericEventActionServiceNameStub = (payload: GenericEventActionPayload, callback: GenericEventActionCallbackFunction) => {
-    // always fire response back
-    callback(NOT_IMPLEMENTED, null);
-  };
-
+  public genericEventActionServiceNameStub = (payload: GenericEventActionPayload) => {
+    return new Promise((reject) => {
+      reject(new Error(NOT_IMPLEMENTED));
+    })
+  };  
 }

@@ -1,6 +1,6 @@
 // tslint:disable: no-empty
 import { ActionBaseInterface } from './action-base-interface';
-import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload, GenericEventActionCallbackFunction } from '../../types';
+import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 import { NOT_IMPLEMENTED } from '../generic-actions';
 
 export class ActionBaseClass implements ActionBaseInterface {
@@ -29,8 +29,9 @@ export class ActionBaseClass implements ActionBaseInterface {
   }
 
   // common function to test actions
-  public genericEventActionNotImplemented = (payload: GenericEventActionPayload, callback: GenericEventActionCallbackFunction) => {
-    // always fire response back
-    callback(NOT_IMPLEMENTED, null);
-  }
+  public genericEventActionNotImplemented = (payload: GenericEventActionPayload) => {
+    return new Promise((reject) => {
+      reject(new Error(NOT_IMPLEMENTED));
+    })
+  };
 }

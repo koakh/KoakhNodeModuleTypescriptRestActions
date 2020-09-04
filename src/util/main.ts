@@ -1,5 +1,3 @@
-import { exec } from 'child_process';
-
 /**
  * generic function to get Enum key from a Enum value
  * @param enumType a typescript Type
@@ -31,56 +29,6 @@ export const getEnumValueFromEnumKey = (enumType: any, enumKey: string | number)
     // throw error to caller function
     throw new Error(`Invalid enum key '${enumKey}'! Valid enum key(s() are ${Object.keys(enumType)}`);
   }
-};
-
-/**
- * generate a fake clientId ex 'UNLICENCED5OMDOR'
- * used when client can't connect with lexActivatorApi
- */
-export const getRandomLicenseKey = (prefix: string) => {
-  const random: string = Math.random().toString(36).substr(2, 6).toUpperCase();
-  return `${prefix}${random}`;
-};
-
-/**
- * helper to convert string environment variable to boolean
- */
-export const isTrue = (value: string): boolean => {
-  return (value && value.toString().toLowerCase() === 'false' || !value || value === '0')
-    ? false
-    : true;
-};
-
-/*
- * compare 2 arrays
- * return true if they are "the same"
- */
-export const listsAreEqual = (list1, list2) => {
-  if (!list1 || !list2) return false;
-  if (list1.length !== list2.length) return false;
-
-  list1.sort();
-  list2.sort();
-  for (let i = 0; i < list1.length; ++i)
-    if (list1[i] !== list2[i]) return false;
-  return true;
-};
-
-/**
- * Execute a shell command
- * @param cmd {string}
- * @return {Promise<string>}
- */
-export const execShellCommand = (cmd) => {
-  return new Promise((resolve, reject) => {
-    exec(cmd, (error, stdout, stderr) => {
-      if (error) {
-        reject(new Error(`cmd "${cmd}" failed - ${error}`));
-      } else {
-        resolve(stdout ? stdout : stderr);
-      }
-    });
-  });
 };
 
 // declare asyncForEach to work with forEach with async/await

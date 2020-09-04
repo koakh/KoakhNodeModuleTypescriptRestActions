@@ -1,4 +1,4 @@
-import { GenericEventAction, GenericEventActionMapObject, GenericEventActionCallbackFunction, GenericEventActionPayload } from '../../types';
+import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 
 export interface ActionBaseInterface {
   // local class actionMap
@@ -12,5 +12,5 @@ export interface ActionBaseInterface {
   // combine all actions into final genericEventActionMapAll
   combineActions();
   // test action stub
-  genericEventActionNotImplemented(payload: GenericEventActionPayload, callback: GenericEventActionCallbackFunction);
+  genericEventActionNotImplemented(payload: GenericEventActionPayload);
 }

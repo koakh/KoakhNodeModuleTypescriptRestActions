@@ -1,5 +1,5 @@
 // tslint:disable-next-line: max-line-length
-import { GenericEventAction, GenericEventActionCallbackFunction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
+import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
 import { getEnumKeyFromEnumValue } from '../util/main';
 import { GenericActionsBaseService } from './service/generic-actions-base-service';
 
@@ -24,47 +24,87 @@ export class GenericActions {
    * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
    * @param callback socket server callback
    */
-  public processAction(action: string, payload: GenericEventActionPayload, callback: GenericEventActionCallbackFunction): void {
-    try {
-      // start getting GenericEventAction enum
-      const genericEventAction: GenericEventAction = this.getGenericEventActionKey(action);
-      // get actionMapObject from genericEventActionMapAll
-      const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
-      if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
-        // get function implementation
-        const actionFunction: GenericEventActionFunction = actionMapObject.func;
-        // get parameters
-        const parameters: Map<string, GenericEventActionParameter> | null = actionMapObject.parameters;
-        // validate parameters, if action has parameters defined
-        if (parameters) {
-          this.validateParameters(payload, parameters, callback);
-        }
-        // validate body, check if has body is a required property, and if payload has body property
-        if ((actionMapObject && actionMapObject.body && actionMapObject.body.required) && (!payload || (payload && !payload.body))) {
-          // delegate to catch
-          const bodyExample: string = (actionMapObject.body.example) ? `. ex.: { body: ${actionMapObject.body.example} }` : '.';
-          throw new Error(`${MISSING_BODY}${bodyExample}`);
-        }
-        // fire actionFunction if pass validateParameters, and validateBody
-        if (actionFunction) {
-          // call actionFunction implementation
-          actionFunction(payload, callback);
+  private processAction(action: string, payload: GenericEventActionPayload): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // start getting GenericEventAction enum
+        const genericEventAction: GenericEventAction = this.getGenericEventActionKey(action);
+        // get actionMapObject from genericEventActionMapAll
+        const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
+        if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
+          // get function implementation
+          const actionFunction: GenericEventActionFunction = actionMapObject.func;
+          // get parameters
+          const parameters: Map<string, GenericEventActionParameter> | null = actionMapObject.parameters;
+          // validate parameters, if action has parameters defined
+          if (parameters) {
+            this.validateParameters(payload, parameters);
+          }
+          // validate body, check if has body is a required property, and if payload has body property
+          if ((actionMapObject && actionMapObject.body && actionMapObject.body.required) && (!payload || (payload && !payload.body))) {
+            // delegate to catch
+            const bodyExample: string = (actionMapObject.body.example) ? `. ex.: { body: ${actionMapObject.body.example} }` : '.';
+            throw new Error(`${MISSING_BODY}${bodyExample}`);
+          }
+          // fire actionFunction if pass validateParameters, and validateBody
+          if (actionFunction) {
+            // call actionFunction implementation
+            const result = await actionFunction(payload);
+          } else {
+            // delegate to catch
+            throw new Error(`invalid genericEventActionFunction implementation for action '${action}'`);
+          }
         } else {
           // delegate to catch
-          throw new Error(`invalid genericEventActionFunction implementation for action '${action}'`);
+          throw new Error(`invalid or disabled action '${action}' or payload...please check if target action is implemented in client, or is not disabled`);
         }
-      } else {
-        // delegate to catch
-        throw new Error(`invalid or disabled action '${action}' or payload...please check if target action is implemented in client, or is not disabled`);
+      } catch (error) {
+        // always fire callback for server acknowledge
+        reject(error.message ? error.message : error);
       }
-    } catch (error) {
-      // always fire callback for server acknowledge
-      callback(error.message, null);
-    }
-  }
+    })
+  };
+
+  // public processAction(action: string, payload: GenericEventActionPayload): void {
+  //   try {
+  //     // start getting GenericEventAction enum
+  //     const genericEventAction: GenericEventAction = this.getGenericEventActionKey(action);
+  //     // get actionMapObject from genericEventActionMapAll
+  //     const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
+  //     if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
+  //       // get function implementation
+  //       const actionFunction: GenericEventActionFunction = actionMapObject.func;
+  //       // get parameters
+  //       const parameters: Map<string, GenericEventActionParameter> | null = actionMapObject.parameters;
+  //       // validate parameters, if action has parameters defined
+  //       if (parameters) {
+  //         this.validateParameters(payload, parameters, callback);
+  //       }
+  //       // validate body, check if has body is a required property, and if payload has body property
+  //       if ((actionMapObject && actionMapObject.body && actionMapObject.body.required) && (!payload || (payload && !payload.body))) {
+  //         // delegate to catch
+  //         const bodyExample: string = (actionMapObject.body.example) ? `. ex.: { body: ${actionMapObject.body.example} }` : '.';
+  //         throw new Error(`${MISSING_BODY}${bodyExample}`);
+  //       }
+  //       // fire actionFunction if pass validateParameters, and validateBody
+  //       if (actionFunction) {
+  //         // call actionFunction implementation
+  //         actionFunction(payload, callback);
+  //       } else {
+  //         // delegate to catch
+  //         throw new Error(`invalid genericEventActionFunction implementation for action '${action}'`);
+  //       }
+  //     } else {
+  //       // delegate to catch
+  //       throw new Error(`invalid or disabled action '${action}' or payload...please check if target action is implemented in client, or is not disabled`);
+  //     }
+  //   } catch (error) {
+  //     // always fire callback for server acknowledge
+  //     callback(error.message, null);
+  //   }
+  // }
 
   private initGenericEventActionMapAll() {
-    debugger;
     // declare local action, the ACTION_ACTION_LIST must be implemented here to access the final genericEventActionMapAll object in actionList
     const genericEventActionMap = new Map<GenericEventAction, GenericEventActionMapObject>([
       [GenericEventAction.ACTION_ACTION_LIST, {
@@ -95,71 +135,9 @@ export class GenericActions {
   }
 
   /**
-   * ACTION_ACTION_LIST
-   */
-  private genericEventActionActionList = (payload: GenericEventActionPayload, callback: GenericEventActionCallbackFunction) => {
-    // all parameters are optional, we must first declare variables, and check empty payload.query
-    let action: string;
-    if (payload && 'body' in payload) {
-      // there is no need to type destruct, we already type it in let
-      ({ action } = payload.body);
-    }
-    // check if is a valid action
-    let genericEventAction: GenericEventAction;
-    if (action) {
-      // start getting GenericEventAction enum
-      genericEventAction = this.getGenericEventActionKey(action);
-      if (!genericEventAction) {
-        throw new Error(`Invalid action key '${action}'! Valid actions are ${Object.keys(GenericEventAction)}`);
-      }
-    }
-
-    try {
-      const actionsPayload: GenericEventActionListResponse[] = [];
-      // convert to array, and iterate over the entries
-      Array.from(this.genericEventActionMapAll.entries())
-        .forEach((entry) => {
-          // key: GenericEventAction, value:GenericEventActionFunction
-          const key: GenericEventAction = entry[0];
-          // inline destruct type entry[1]
-          const { func, description, link, parameters, body, disabled }: GenericEventActionMapObject = entry[1];
-          // App.log(LogLevel.DEBUG, `key: ${key}, disabled: ${disabled}`);
-          // only add action if defined and not disabled, ex implemented, else we skip method to prevent un-implemented actions in list
-          // and if action is defined and equal to payload action
-          if (!disabled && ((func && !genericEventAction) || (func && genericEventAction && genericEventAction === key))) {
-            // clean up parameter array item and add a name parameter ex
-            // from: { "parameters": [ [ "action", { "required": false, "type": "action", "description": "action ex.: ACTION_CLIENT_STATUS" } ] ] }
-            //   to: { "parameters": [ [ { "name": "action", "required": false, "type": "action", "description": "action ex.: ACTION_CLIENT_STATUS" } ] ] }
-            let paramList;
-            if (parameters && parameters.size > 0) {
-              paramList = Array.from(parameters.entries()).map(p => {
-                const parameterName: string = p[0];
-                // inject parameterName as a property `name`
-                (p[1] as any).name = parameterName;
-                return p[1];
-              });
-            }
-            actionsPayload.push({
-              action: key,
-              description: (description) ? description : undefined,
-              link: (link) ? link : undefined,
-              parameters: paramList,
-              body: (body) ? body : undefined,
-            });
-          }
-        });
-
-      // execute action
-      if (callback) { callback(null, actionsPayload); }
-    } catch (error) {
-      if (callback) { callback(error, null); }
-    }
-  }
-
-  /**
    * common function to validate ACTION PAYLOAD, payload and query parameters
    */
-  private validateParameters(payload: GenericEventActionPayload, parameters: Map<string, GenericEventActionParameter>, callback: GenericEventActionCallbackFunction) {
+  private validateParameters(payload: GenericEventActionPayload, parameters: Map<string, GenericEventActionParameter>) {
     let parametersDisplay: string[] = [];
     const parametersArray: [string, GenericEventActionParameter][] = Array.from(parameters.entries());
     let haveRequiredParameters: boolean = false;
@@ -217,4 +195,68 @@ export class GenericActions {
       return null;
     }
   }
+
+  /**
+   * ACTION_ACTION_LIST
+   */
+  private genericEventActionActionList = (payload: GenericEventActionPayload): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      // all parameters are optional, we must first declare variables, and check empty payload.query
+      let action: string;
+      if (payload && 'body' in payload) {
+        // there is no need to type destruct, we already type it in let
+        ({ action } = payload.body);
+      }
+      // check if is a valid action
+      let genericEventAction: GenericEventAction;
+      if (action) {
+        // start getting GenericEventAction enum
+        genericEventAction = this.getGenericEventActionKey(action);
+        if (!genericEventAction) {
+          throw new Error(`Invalid action key '${action}'! Valid actions are ${Object.keys(GenericEventAction)}`);
+        }
+      }
+
+      try {
+        const actionsPayload: GenericEventActionListResponse[] = [];
+        // convert to array, and iterate over the entries
+        Array.from(this.genericEventActionMapAll.entries())
+          .forEach((entry) => {
+            // key: GenericEventAction, value:GenericEventActionFunction
+            const key: GenericEventAction = entry[0];
+            // inline destruct type entry[1]
+            const { func, description, link, parameters, body, disabled }: GenericEventActionMapObject = entry[1];
+            // App.log(LogLevel.DEBUG, `key: ${key}, disabled: ${disabled}`);
+            // only add action if defined and not disabled, ex implemented, else we skip method to prevent un-implemented actions in list
+            // and if action is defined and equal to payload action
+            if (!disabled && ((func && !genericEventAction) || (func && genericEventAction && genericEventAction === key))) {
+              // clean up parameter array item and add a name parameter ex
+              // from: { "parameters": [ [ "action", { "required": false, "type": "action", "description": "action ex.: ACTION_CLIENT_STATUS" } ] ] }
+              //   to: { "parameters": [ [ { "name": "action", "required": false, "type": "action", "description": "action ex.: ACTION_CLIENT_STATUS" } ] ] }
+              let paramList;
+              if (parameters && parameters.size > 0) {
+                paramList = Array.from(parameters.entries()).map(p => {
+                  const parameterName: string = p[0];
+                  // inject parameterName as a property `name`
+                  (p[1] as any).name = parameterName;
+                  return p[1];
+                });
+              }
+              actionsPayload.push({
+                action: key,
+                description: (description) ? description : undefined,
+                link: (link) ? link : undefined,
+                parameters: paramList,
+                body: (body) ? body : undefined,
+              });
+            }
+          });
+
+        // execute action
+        resolve(actionsPayload);
+      } catch (error) {
+        reject(error);
+      }
+    })
+  };
 }
