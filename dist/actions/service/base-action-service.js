@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseActionService = void 0;
 const types_1 = require("../../types");
 const action_base_class_1 = require("../base/action-base-class");
-const generic_actions_1 = require("../generic-actions");
 const shell_action_service_1 = require("./shell-action-service");
 class BaseActionService extends action_base_class_1.ActionBaseClass {
     constructor(getGenericEventActionKey) {
@@ -22,7 +21,7 @@ class BaseActionService extends action_base_class_1.ActionBaseClass {
                     let result;
                     // execute action if message is defined, this way works with required and optional parameters
                     if (message) {
-                        result = 'message sent';
+                        result = 'message received, check console output';
                         console.log(message);
                     }
                     else {
@@ -52,10 +51,10 @@ class BaseActionService extends action_base_class_1.ActionBaseClass {
          * ACTION_ACK_KO
          */
         this.genericEventActionAckKo = (payload) => {
-            return new Promise((reject) => {
+            return new Promise((_, reject) => {
                 // simulate some work...
                 setTimeout(() => {
-                    reject(new Error(generic_actions_1.NOT_IMPLEMENTED));
+                    reject(new Error('something wrong happens!'));
                 }, 2500);
             });
         };
@@ -71,7 +70,14 @@ class BaseActionService extends action_base_class_1.ActionBaseClass {
                     body: {
                         required: true,
                         description: 'just a test console log action',
-                        example: `body: {'pwd'} | body: {['pwd', 'ls -la']}`
+                        example: {
+                            action: 'ACTION_CONSOLE_LOG',
+                            payload: {
+                                body: {
+                                    message: 'hello, check the console'
+                                }
+                            }
+                        }
                     }
                 }],
             [types_1.GenericEventAction.ACTION_ACK_OK, {

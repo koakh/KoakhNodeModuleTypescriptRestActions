@@ -14,23 +14,21 @@ export class ShellActionService extends ActionBaseClass {
     this.genericEventActionMap = new Map<GenericEventAction, GenericEventActionMapObject>([
       [GenericEventAction.ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC, {
         func: this.genericEventActionShellGenericShellExec,
-        description: 'Execute shell command(s) forwarding all stdio.',
-        link: 'https://www.npmjs.com/package/exec-sh#public-api',
+        description: 'Execute shell command(s) forwarding all stdio, stderr',
         body: {
           required: true,
           description: 'require a body with command payload',
           example: {
-            // TODO implement array of multiple commands
-            singleCommand: {
+            payload: {
               body: {
                 cmd: 'service',
                 args: ['sshd', 'status'],
-                cwd: '/tmp',
-                showLog: false,
-              },
-            },
+                cwd: null,
+                showLog: false
+              }
+            }
           },
-        }
+        },
       }],
     ]);
   }
@@ -41,20 +39,6 @@ export class ShellActionService extends ActionBaseClass {
     this.combineActions();
   }
 
-  // TODO is used?
-  // private execShell = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecShellCommandResponse> => {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       const res: ExecShellCommandResponse = await execShellCommand(cmd, args, cwd, showLog);
-  //       // resolve promise
-  //       resolve(res);
-  //     } catch (error) {
-  //       // reject promise
-  //       reject(error);
-  //     }
-  //   })
-  // };
-  
   // TODO is used?
   /**
    * helper to get error message from execShPromise

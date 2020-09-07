@@ -17,7 +17,7 @@ export class GenericActions {
   // combined version of local genericEventActionMap, and all actions for current clientType
   private genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>();
 
-  constructor()  {
+  constructor() {
     // init actions
     this.initGenericEventActionMapAll();
   }
@@ -50,8 +50,9 @@ export class GenericActions {
           }
           // fire actionFunction if pass validateParameters, and validateBody
           if (actionFunction) {
-            // call actionFunction implementation
+            // call actionFunction implementation: error delegated to catch
             const result = await actionFunction(payload);
+            // else resolve promise
             resolve(result);
           } else {
             // delegate to catch
@@ -62,8 +63,7 @@ export class GenericActions {
           throw new Error(`invalid or disabled action '${action}' or payload...check if '${action}' is implemented and is enabled`);
         }
       } catch (error) {
-        // always fire callback for server acknowledge
-        reject(error.message ? error.message : error);
+        reject(error);
       }
     })
   };

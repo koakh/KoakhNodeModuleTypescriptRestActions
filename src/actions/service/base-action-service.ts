@@ -4,7 +4,6 @@
 
 import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 import { ActionBaseClass } from '../base/action-base-class';
-import { NOT_IMPLEMENTED } from '../generic-actions';
 import { ShellActionService } from './shell-action-service';
 
 export class BaseActionService extends ActionBaseClass {
@@ -26,7 +25,14 @@ export class BaseActionService extends ActionBaseClass {
         body: {
           required: true,
           description: 'just a test console log action',
-          example: `body: {'pwd'} | body: {['pwd', 'ls -la']}`
+          example: {
+            action: 'ACTION_CONSOLE_LOG',
+            payload: {
+              body: {
+                message: 'hello, check the console'
+              }
+            }
+          }
         }
       }],
       [GenericEventAction.ACTION_ACK_OK, {
@@ -57,7 +63,7 @@ export class BaseActionService extends ActionBaseClass {
         let result: string;
         // execute action if message is defined, this way works with required and optional parameters
         if (message) {
-          result = 'message sent';
+          result = 'message received, check console output';
           console.log(message);
         } else {
           result = 'message received, but not logged to console because miss optional parameter \'message\'';
@@ -86,10 +92,10 @@ export class BaseActionService extends ActionBaseClass {
    * ACTION_ACK_KO
    */
   private genericEventActionAckKo = (payload: GenericEventActionPayload) => {
-    return new Promise((reject) => {
+    return new Promise((_, reject) => {
       // simulate some work...
       setTimeout(() => {
-        reject(new Error(NOT_IMPLEMENTED));
+        reject(new Error('something wrong happens!'));
       }, 2500);
     })
   };

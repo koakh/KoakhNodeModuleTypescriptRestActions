@@ -140,8 +140,9 @@ class GenericActions {
                     }
                     // fire actionFunction if pass validateParameters, and validateBody
                     if (actionFunction) {
-                        // call actionFunction implementation
+                        // call actionFunction implementation: error delegated to catch
                         const result = yield actionFunction(payload);
+                        // else resolve promise
                         resolve(result);
                     }
                     else {
@@ -155,8 +156,7 @@ class GenericActions {
                 }
             }
             catch (error) {
-                // always fire callback for server acknowledge
-                reject(error.message ? error.message : error);
+                reject(error);
             }
         }));
     }
