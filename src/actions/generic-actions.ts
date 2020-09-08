@@ -1,7 +1,8 @@
 // tslint:disable-next-line: max-line-length
-import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
+import { GenericEventAction, GenericEventActionEnum, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
 import { getEnumKeyFromEnumValue } from '../util/main';
 import { BaseActionService } from './service/base-action-service';
+import { ActionBaseInterface } from './base/action-base-interface';
 
 export const NOT_IMPLEMENTED: string = 'current action is registered, but is not implemented! please implement a valid GenericEventActionFunction for it';
 export const MISSING_PARAMETERS: string = 'missing query parameter(s)';
@@ -17,7 +18,14 @@ export class GenericActions {
   // combined version of local genericEventActionMap, and all actions for current clientType
   private genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>();
 
-  constructor() {
+  /**
+   * init generic event actions, arguments passed by consumer app, like action services and other external configuration
+   * @param actionsServices optional action service array sent by external packages, like consumer apps
+   */
+  constructor(
+    private readonly actionsServices?: ActionBaseInterface[],
+    private readonly genericEventActions?: GenericEventActionEnum,
+    ) {
     // init actions
     this.initGenericEventActionMapAll();
   }
@@ -85,6 +93,14 @@ export class GenericActions {
     // common actions for all clients: push SocketGenericActionsBaseService service component
     const actionsBase: BaseActionService = new BaseActionService(this.getGenericEventActionKey);
     this.genericEventActionMapArray.push(actionsBase.getActions());
+
+    // inject consumer services from outside of package
+    this.actionsServices.forEach((e: ActionBaseInterface) => {
+      this.genericEventActionMapArray.push(e.getActions());
+    });
+    // genericEventAction
+    console.log(this.genericEventActions);
+    debugger;
 
     // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used
     // and finish the combination of local, common, and specific clientTypes actions

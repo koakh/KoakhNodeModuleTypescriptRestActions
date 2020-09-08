@@ -1,3 +1,8 @@
+// make up your own interface to match TypeScript enums as closely as possible
+export interface GenericEventActionEnum {
+  [id: string]: string
+}
+
 /**
  * GenericEventAction enums
  */

@@ -21,7 +21,13 @@ exports.MISSING_BODY = 'missing payload body';
  * common generic Actions file, to manage actions for all types
  */
 class GenericActions {
-    constructor() {
+    /**
+     * init generic event actions, arguments passed by consumer app, like action services and other external configuration
+     * @param actionsServices optional action service array sent by external packages, like consumer apps
+     */
+    constructor(actionsServices, genericEventActions) {
+        this.actionsServices = actionsServices;
+        this.genericEventActions = genericEventActions;
         // array of action map to combine into final genericEventActionMapAll
         this.genericEventActionMapArray = [];
         // combined version of local genericEventActionMap, and all actions for current clientType
@@ -176,6 +182,13 @@ class GenericActions {
         // common actions for all clients: push SocketGenericActionsBaseService service component
         const actionsBase = new base_action_service_1.BaseActionService(this.getGenericEventActionKey);
         this.genericEventActionMapArray.push(actionsBase.getActions());
+        // inject consumer services from outside of package
+        this.actionsServices.forEach((e) => {
+            this.genericEventActionMapArray.push(e.getActions());
+        });
+        // genericEventAction
+        console.log(this.genericEventActions);
+        debugger;
         // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used
         // and finish the combination of local, common, and specific clientTypes actions
         this.genericEventActionMapArray.forEach((e) => {
