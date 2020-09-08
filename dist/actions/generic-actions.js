@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenericActions = exports.MISSING_BODY = exports.MISSING_PARAMETERS = exports.NOT_IMPLEMENTED = void 0;
 // tslint:disable-next-line: max-line-length
 const types_1 = require("../types");
-const main_1 = require("../util/main");
 const base_action_service_1 = require("./service/base-action-service");
 exports.NOT_IMPLEMENTED = 'current action is registered, but is not implemented! please implement a valid GenericEventActionFunction for it';
 exports.MISSING_PARAMETERS = 'missing query parameter(s)';
@@ -39,23 +38,23 @@ class GenericActions {
         this.genericEventActionMapAll = new Map();
         /**
          * check if is a valid GenericEventAction and is is implemented in genericEventActionMap
-         * returns GenericEventAction or null if invalid/ or not implemented in genericEventActionMap
-         * @param action the action that was sent in CLIENT_CHANNEL payload
+         * returns GenericEventAction string or throw error on invalid action sent by user
+         * @param action the action that was sent from client
          */
         this.getGenericEventActionKey = (action) => {
             try {
-                // check if valid enum / getEnumKeyFromEnumValue throws an exception if not
-                const eventAction = main_1.getEnumKeyFromEnumValue(types_1.GenericEventAction, action);
+                // check if valid action an exception if not
+                const eventAction = this.genericEventActionMapActions.get(action);
                 // check if valid enum and if is implemented in genericEventActionMap
                 if (eventAction && this.genericEventActionMapAll.has(eventAction)) {
                     return eventAction;
                 }
                 else {
-                    return null;
+                    throw new Error(`invalid action '${action}'`);
                 }
             }
             catch (error) {
-                return null;
+                throw error;
             }
         };
         /**

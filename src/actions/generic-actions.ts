@@ -1,8 +1,7 @@
 // tslint:disable-next-line: max-line-length
 import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
-import { getEnumKeyFromEnumValue } from '../util/main';
-import { BaseActionService } from './service/base-action-service';
 import { ActionBaseInterface } from './base/action-base-interface';
+import { BaseActionService } from './service/base-action-service';
 
 export const NOT_IMPLEMENTED: string = 'current action is registered, but is not implemented! please implement a valid GenericEventActionFunction for it';
 export const MISSING_PARAMETERS: string = 'missing query parameter(s)';
@@ -16,9 +15,9 @@ export class GenericActions {
   // map of actions, this way we can extend, and add more actions from consumer apps
   private genericEventActionMapActions: Map<string, string> = new Map<string, string>();
   // array of action map to combine into final genericEventActionMapAll
-  private genericEventActionMapArray: Map<GenericEventAction, GenericEventActionMapObject>[] = [];
+  private genericEventActionMapArray: Map<string, GenericEventActionMapObject>[] = [];
   // combined version of local genericEventActionMap, and all actions for current clientType
-  private genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>();
+  private genericEventActionMapAll = new Map<string, GenericEventActionMapObject>();
 
   /**
    * init generic event actions, arguments passed by consumer app, like action services and other external configuration
@@ -44,7 +43,7 @@ export class GenericActions {
     return new Promise(async (resolve, reject) => {
       try {
         // start getting GenericEventAction enum
-        const genericEventAction: GenericEventAction = this.getGenericEventActionKey(action);
+        const genericEventAction = this.getGenericEventActionKey(action);
         // get actionMapObject from genericEventActionMapAll
         const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
         if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
@@ -100,7 +99,7 @@ export class GenericActions {
 
   private initGenericEventActionMapAll() {
     // declare local action, the ACTION_ACTION_LIST must be implemented here to access the final genericEventActionMapAll object in actionList
-    const genericEventActionMap = new Map<GenericEventAction, GenericEventActionMapObject>([
+    const genericEventActionMap = new Map<string, GenericEventActionMapObject>([
       [GenericEventAction.ACTION_ACTION_LIST, {
         func: this.genericEventActionActionList,
         parameters: new Map<string, GenericEventActionParameter>([
@@ -125,8 +124,8 @@ export class GenericActions {
 
     // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used
     // and finish the combination of local, common, and specific clientTypes actions
-    this.genericEventActionMapArray.forEach((e: Map<GenericEventAction, GenericEventActionMapObject>) => {
-      this.genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>([
+    this.genericEventActionMapArray.forEach((e: Map<string, GenericEventActionMapObject>) => {
+      this.genericEventActionMapAll = new Map<string, GenericEventActionMapObject>([
         // local map
         ...Array.from(this.genericEventActionMapAll.entries()),
         // iterate map
@@ -179,21 +178,21 @@ export class GenericActions {
 
   /**
    * check if is a valid GenericEventAction and is is implemented in genericEventActionMap
-   * returns GenericEventAction or null if invalid/ or not implemented in genericEventActionMap
-   * @param action the action that was sent in CLIENT_CHANNEL payload
+   * returns GenericEventAction string or throw error on invalid action sent by user
+   * @param action the action that was sent from client
    */
-  private getGenericEventActionKey = (action: string): GenericEventAction => {
+  private getGenericEventActionKey = (action: string): string => {
     try {
-      // check if valid enum / getEnumKeyFromEnumValue throws an exception if not
-      const eventAction: GenericEventAction = getEnumKeyFromEnumValue(GenericEventAction, action);
+      // check if valid action an exception if not
+      const eventAction = this.genericEventActionMapActions.get(action);
       // check if valid enum and if is implemented in genericEventActionMap
       if (eventAction && this.genericEventActionMapAll.has(eventAction)) {
         return eventAction;
       } else {
-        return null;
+        throw new Error(`invalid action '${action}'`);
       }
     } catch (error) {
-      return null;
+      throw error;
     }
   }
 
@@ -209,7 +208,7 @@ export class GenericActions {
         ({ action } = payload.body);
       }
       // check if is a valid action
-      let genericEventAction: GenericEventAction;
+      let genericEventAction: string;
       if (action) {
         // start getting GenericEventAction enum
         genericEventAction = this.getGenericEventActionKey(action);
@@ -224,7 +223,7 @@ export class GenericActions {
         Array.from(this.genericEventActionMapAll.entries())
           .forEach((entry) => {
             // key: GenericEventAction, value:GenericEventActionFunction
-            const key: GenericEventAction = entry[0];
+            const key = entry[0];
             // inline destruct type entry[1]
             const { func, description, link, parameters, body, disabled }: GenericEventActionMapObject = entry[1];
             // App.log(LogLevel.DEBUG, `key: ${key}, disabled: ${disabled}`);

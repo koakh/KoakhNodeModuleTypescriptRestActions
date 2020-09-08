@@ -1,14 +1,14 @@
 // tslint:disable: no-empty
-import { ActionBaseInterface } from './action-base-interface';
-import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
+import { GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 import { NOT_IMPLEMENTED } from '../generic-actions';
+import { ActionBaseInterface } from './action-base-interface';
 
 export class ActionBaseClass implements ActionBaseInterface {
-  public genericEventActionMap = new Map<GenericEventAction, GenericEventActionMapObject>();
-  public genericEventActionMapArray: Map<GenericEventAction, GenericEventActionMapObject>[] = [];
-  public genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>();
+  public genericEventActionMap = new Map<string, GenericEventActionMapObject>();
+  public genericEventActionMapArray: Map<string, GenericEventActionMapObject>[] = [];
+  public genericEventActionMapAll = new Map<string, GenericEventActionMapObject>();
 
-  public getActions(): Map<GenericEventAction, GenericEventActionMapObject> {
+  public getActions(): Map<string, GenericEventActionMapObject> {
     // return combined all
     return this.genericEventActionMapAll;
   }
@@ -18,8 +18,8 @@ export class ActionBaseClass implements ActionBaseInterface {
     this.genericEventActionMapArray.unshift(this.genericEventActionMap);
 
     // now combine all actions into final genericEventActionMapAll
-    this.genericEventActionMapArray.forEach((e: Map<GenericEventAction, GenericEventActionMapObject>) => {
-      this.genericEventActionMapAll = new Map<GenericEventAction, GenericEventActionMapObject>([
+    this.genericEventActionMapArray.forEach((e: Map<string, GenericEventActionMapObject>) => {
+      this.genericEventActionMapAll = new Map<string, GenericEventActionMapObject>([
         // local map
         ...Array.from(this.genericEventActionMapAll.entries()),
         // iterate map

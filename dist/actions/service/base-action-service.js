@@ -1,12 +1,12 @@
 "use strict";
-/**
- * base actions for all clients
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseActionService = void 0;
 const types_1 = require("../../types");
 const action_base_class_1 = require("../base/action-base-class");
 const shell_action_service_1 = require("./shell-action-service");
+/**
+ * base actions for all clients
+ */
 class BaseActionService extends action_base_class_1.ActionBaseClass {
     constructor(getGenericEventActionKey) {
         super();
@@ -71,7 +71,6 @@ class BaseActionService extends action_base_class_1.ActionBaseClass {
                         required: true,
                         description: 'just a test console log action',
                         example: {
-                            action: 'ACTION_CONSOLE_LOG',
                             payload: {
                                 body: {
                                     message: 'hello, check the console'

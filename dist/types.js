@@ -1,8 +1,4 @@
 "use strict";
-// used in function/method arguments : make up your own interface to match TypeScript enums as closely as possible
-// export interface GenericEventActionEnum {
-//   [id: string]: string
-// }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenericEventActionParameterType = exports.GenericEventAction = void 0;
 /**

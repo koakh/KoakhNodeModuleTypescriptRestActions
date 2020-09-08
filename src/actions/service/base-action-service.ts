@@ -1,11 +1,10 @@
-/**
- * base actions for all clients
- */
-
 import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 import { ActionBaseClass } from '../base/action-base-class';
 import { ShellActionService } from './shell-action-service';
 
+/**
+ * base actions for all clients
+ */
 export class BaseActionService extends ActionBaseClass {
 
   constructor(
@@ -26,7 +25,6 @@ export class BaseActionService extends ActionBaseClass {
           required: true,
           description: 'just a test console log action',
           example: {
-            action: 'ACTION_CONSOLE_LOG',
             payload: {
               body: {
                 message: 'hello, check the console'
