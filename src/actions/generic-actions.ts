@@ -1,5 +1,5 @@
 // tslint:disable-next-line: max-line-length
-import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
+import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload, ProcessActionCallbackArguments } from '../types';
 import { ActionBaseInterface } from './base/action-base-interface';
 import { BaseActionService } from './service/base-action-service';
 
@@ -39,13 +39,13 @@ export class GenericActions {
    * processAction, this function will work with all implemented generic function actions, receive action and payload
    * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
    */
-  public processAction(action: string, payload?: GenericEventActionPayload): Promise<any> {
+  public processAction(action: string, payload?: GenericEventActionPayload, callback?: (args: ProcessActionCallbackArguments) => void): Promise<any> {
     return new Promise(async (resolve, reject) => {
+      // start getting GenericEventAction enum
+      const genericEventAction = this.getGenericEventActionKey(action);
+      // get actionMapObject from genericEventActionMapAll
+      const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
       try {
-        // start getting GenericEventAction enum
-        const genericEventAction = this.getGenericEventActionKey(action);
-        // get actionMapObject from genericEventActionMapAll
-        const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
         if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
           // get function implementation
           const actionFunction: GenericEventActionFunction = actionMapObject.func;
@@ -65,6 +65,8 @@ export class GenericActions {
           if (actionFunction) {
             // call actionFunction implementation: error delegated to catch
             const result = await actionFunction(payload);
+            // fire callback
+            if (callback && actionMapObject.fireEvent) callback({ action, payload, result });
             // else resolve promise
             resolve(result);
           } else {
@@ -76,6 +78,8 @@ export class GenericActions {
           throw new Error(`invalid or disabled action '${action}' or payload...check if '${action}' is implemented and is enabled`);
         }
       } catch (error) {
+        // fire callback
+        if (callback && actionMapObject.fireEvent) callback({ action, payload, error });
         reject(error);
       }
     })

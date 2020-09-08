@@ -127,13 +127,13 @@ class GenericActions {
      * processAction, this function will work with all implemented generic function actions, receive action and payload
      * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
      */
-    processAction(action, payload) {
+    processAction(action, payload, callback) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            // start getting GenericEventAction enum
+            const genericEventAction = this.getGenericEventActionKey(action);
+            // get actionMapObject from genericEventActionMapAll
+            const actionMapObject = this.genericEventActionMapAll.get(genericEventAction);
             try {
-                // start getting GenericEventAction enum
-                const genericEventAction = this.getGenericEventActionKey(action);
-                // get actionMapObject from genericEventActionMapAll
-                const actionMapObject = this.genericEventActionMapAll.get(genericEventAction);
                 if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
                     // get function implementation
                     const actionFunction = actionMapObject.func;
@@ -153,6 +153,9 @@ class GenericActions {
                     if (actionFunction) {
                         // call actionFunction implementation: error delegated to catch
                         const result = yield actionFunction(payload);
+                        // fire callback
+                        if (callback && actionMapObject.fireEvent)
+                            callback({ action, payload, result });
                         // else resolve promise
                         resolve(result);
                     }
@@ -167,6 +170,9 @@ class GenericActions {
                 }
             }
             catch (error) {
+                // fire callback
+                if (callback && actionMapObject.fireEvent)
+                    callback({ action, payload, error });
                 reject(error);
             }
         }));

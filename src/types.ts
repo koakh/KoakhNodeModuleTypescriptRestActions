@@ -75,6 +75,7 @@ export interface GenericEventActionMapObject {
   parameters?: Map<string, GenericEventActionParameter>;
   body?: GenericEventActionBody;
   disabled?: boolean;
+  fireEvent?: boolean;
 }
 
 // used in actionList response payload
@@ -85,3 +86,5 @@ export interface GenericEventActionListResponse {
   parameters?: GenericEventActionParameter[];
   body?: GenericEventActionBody;
 }
+
+export type ProcessActionCallbackArguments = {action: string, payload: any, result?: any, error?: Error};
