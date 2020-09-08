@@ -1,12 +1,19 @@
-// make up your own interface to match TypeScript enums as closely as possible
-export interface GenericEventActionEnum {
-  [id: string]: string
+// used in function/method arguments : make up your own interface to match TypeScript enums as closely as possible
+// export interface GenericEventActionEnum {
+//   [id: string]: string
+// }
+
+/**
+ * GenericEventAction map (a map of enums)
+ */
+export interface GenericEventActionMap {
+  key: string;
 }
 
 /**
  * GenericEventAction enums
  */
-export enum GenericEventAction {
+ export enum GenericEventAction {
   // core actions
   ACTION_NOT_IMPLEMENTED = 'ACTION_NOT_IMPLEMENTED',
   ACTION_CLIENT_STATUS = 'ACTION_CLIENT_STATUS',

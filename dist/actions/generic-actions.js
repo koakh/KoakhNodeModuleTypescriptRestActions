@@ -24,10 +24,15 @@ class GenericActions {
     /**
      * init generic event actions, arguments passed by consumer app, like action services and other external configuration
      * @param actionsServices optional action service array sent by external packages, like consumer apps
+     * @param consumerEventActions optional action enum sent by external packages
+     * @param initBaseActions init base actions
      */
-    constructor(actionsServices, genericEventActions) {
+    constructor(actionsServices, consumerEventActions, initBaseActions) {
         this.actionsServices = actionsServices;
-        this.genericEventActions = genericEventActions;
+        this.consumerEventActions = consumerEventActions;
+        this.initBaseActions = initBaseActions;
+        // map of actions, this way we can extend, and add more actions from consumer apps
+        this.genericEventActionMapActions = new Map();
         // array of action map to combine into final genericEventActionMapAll
         this.genericEventActionMapArray = [];
         // combined version of local genericEventActionMap, and all actions for current clientType
@@ -116,6 +121,7 @@ class GenericActions {
             });
         };
         // init actions
+        this.initGenericEventActionMapActions();
         this.initGenericEventActionMapAll();
     }
     /**
@@ -167,6 +173,22 @@ class GenericActions {
         }));
     }
     ;
+    initGenericEventActionMapActions() {
+        // add local modules actions
+        const localActionKeys = Object.keys(types_1.GenericEventAction);
+        if (localActionKeys) {
+            localActionKeys.forEach((e) => {
+                this.genericEventActionMapActions.set(e, e);
+            });
+        }
+        ;
+        // add consumer/external module actions
+        if (this.consumerEventActions) {
+            this.consumerEventActions.forEach((e) => {
+                this.genericEventActionMapActions.set(e, e);
+            });
+        }
+    }
     initGenericEventActionMapAll() {
         // declare local action, the ACTION_ACTION_LIST must be implemented here to access the final genericEventActionMapAll object in actionList
         const genericEventActionMap = new Map([
@@ -179,16 +201,15 @@ class GenericActions {
         ]);
         // common actions for all clients: push local genericEventActionMap
         this.genericEventActionMapArray.push(genericEventActionMap);
-        // common actions for all clients: push SocketGenericActionsBaseService service component
-        const actionsBase = new base_action_service_1.BaseActionService(this.getGenericEventActionKey);
-        this.genericEventActionMapArray.push(actionsBase.getActions());
+        // common baseActions
+        if (this.initBaseActions && this.initBaseActions === true) {
+            const actionsBase = new base_action_service_1.BaseActionService(this.getGenericEventActionKey);
+            this.genericEventActionMapArray.push(actionsBase.getActions());
+        }
         // inject consumer services from outside of package
         this.actionsServices.forEach((e) => {
             this.genericEventActionMapArray.push(e.getActions());
         });
-        // genericEventAction
-        console.log(this.genericEventActions);
-        debugger;
         // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used
         // and finish the combination of local, common, and specific clientTypes actions
         this.genericEventActionMapArray.forEach((e) => {

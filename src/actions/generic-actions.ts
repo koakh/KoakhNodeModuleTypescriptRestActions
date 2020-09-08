@@ -1,5 +1,5 @@
 // tslint:disable-next-line: max-line-length
-import { GenericEventAction, GenericEventActionEnum, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
+import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
 import { getEnumKeyFromEnumValue } from '../util/main';
 import { BaseActionService } from './service/base-action-service';
 import { ActionBaseInterface } from './base/action-base-interface';
@@ -13,6 +13,8 @@ export const MISSING_BODY: string = 'missing payload body';
  */
 
 export class GenericActions {
+  // map of actions, this way we can extend, and add more actions from consumer apps
+  private genericEventActionMapActions: Map<string, string> = new Map<string, string>();
   // array of action map to combine into final genericEventActionMapAll
   private genericEventActionMapArray: Map<GenericEventAction, GenericEventActionMapObject>[] = [];
   // combined version of local genericEventActionMap, and all actions for current clientType
@@ -21,12 +23,16 @@ export class GenericActions {
   /**
    * init generic event actions, arguments passed by consumer app, like action services and other external configuration
    * @param actionsServices optional action service array sent by external packages, like consumer apps
+   * @param consumerEventActions optional action enum sent by external packages
+   * @param initBaseActions init base actions
    */
   constructor(
     private readonly actionsServices?: ActionBaseInterface[],
-    private readonly genericEventActions?: GenericEventActionEnum,
-    ) {
+    private readonly consumerEventActions?: string[],
+    private readonly initBaseActions?: boolean,
+  ) {
     // init actions
+    this.initGenericEventActionMapActions();
     this.initGenericEventActionMapAll();
   }
 
@@ -76,6 +82,22 @@ export class GenericActions {
     })
   };
 
+  private initGenericEventActionMapActions() {
+    // add local modules actions
+    const localActionKeys = Object.keys(GenericEventAction);
+    if (localActionKeys) {
+      localActionKeys.forEach((e) => {
+        this.genericEventActionMapActions.set(e, e);
+      });
+    };
+    // add consumer/external module actions
+    if (this.consumerEventActions) {
+      this.consumerEventActions.forEach((e) => {
+        this.genericEventActionMapActions.set(e, e);
+      });
+    }
+  }
+
   private initGenericEventActionMapAll() {
     // declare local action, the ACTION_ACTION_LIST must be implemented here to access the final genericEventActionMapAll object in actionList
     const genericEventActionMap = new Map<GenericEventAction, GenericEventActionMapObject>([
@@ -90,17 +112,16 @@ export class GenericActions {
     // common actions for all clients: push local genericEventActionMap
     this.genericEventActionMapArray.push(genericEventActionMap);
 
-    // common actions for all clients: push SocketGenericActionsBaseService service component
-    const actionsBase: BaseActionService = new BaseActionService(this.getGenericEventActionKey);
-    this.genericEventActionMapArray.push(actionsBase.getActions());
+    // common baseActions
+    if (this.initBaseActions && this.initBaseActions === true) {
+      const actionsBase: BaseActionService = new BaseActionService(this.getGenericEventActionKey);
+      this.genericEventActionMapArray.push(actionsBase.getActions());
+    }
 
     // inject consumer services from outside of package
     this.actionsServices.forEach((e: ActionBaseInterface) => {
       this.genericEventActionMapArray.push(e.getActions());
     });
-    // genericEventAction
-    console.log(this.genericEventActions);
-    debugger;
 
     // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used
     // and finish the combination of local, common, and specific clientTypes actions
