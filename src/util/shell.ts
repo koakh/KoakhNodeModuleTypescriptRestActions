@@ -30,13 +30,13 @@ export const execShellCommand = (cmd: string, args: string[] = [], cwd: string =
       // if (showLog) console.info(`process exited with code ${code}`);
     })
     // signal variable is null when the child process exits normally
-    child.on('exit', function (code: number, signal: NodeJS.Signals) {
-      // transform into array and sanitize strings
-      let output = stdout.toString().trim().split('\n').map(e => e.trim().toLocaleLowerCase());
+    child.on('exit', (code: number, signal: NodeJS.Signals) => {
+      // inner function: transform into array and sanitize strings
+      const output = (input) => input.toString().trim().split('\n').map((e) => e.trim().toLocaleLowerCase());
       if (code > 0) {
-        resolve({ code, stdout: output });
+        reject({ code, stderr: output(stderr) });
       } else {
-        resolve({ code, stdout: output });
+        resolve({ code, stdout: output(stdout) });
       }
       // this is not need
       // if (showLog) console.info(`child process exited with code ${code} and signal ${signal}`);
@@ -47,10 +47,6 @@ export const execShellCommand = (cmd: string, args: string[] = [], cwd: string =
     });
     child.stderr.on('data', (data) => {
       if (showLog) console.info(`child stderr:\n${data}`);
-      stderr += data;
-    });
-    child.stderr.on('data', (data) => {
-      if (showLog) console.info(`data:\n${data}`);
       stderr += data;
     });
   } catch (error) {
