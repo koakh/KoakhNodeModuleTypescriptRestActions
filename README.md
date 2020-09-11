@@ -4,6 +4,10 @@
 - [github](https://github.com/koakh/KoakhNodeModuleTypescriptRestActions.git)
 - [npm](https://www.npmjs.com/package/@koakh/typescript-rest-actions-api)
 
+## Sample App Project
+
+- [KoakhNodeModuleTypescriptRestActionsSampleApp](https://github.com/koakh/-KoakhNodeModuleTypescriptRestActionsSampleApp)
+
 ## Description
 
 a simple rest endpoint implementing koakh ACTION's pattern, useful to have only a http endpoint with unlimited self documented ACTION's
