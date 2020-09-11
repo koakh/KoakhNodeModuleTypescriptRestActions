@@ -201,9 +201,9 @@ export class GenericActions {
   }
 
   /**
-   * ACTION_ACTION_LIST
+   * ACTION_ACTION_LIST: public exposed to docs api
    */
-  private genericEventActionActionList = (payload: GenericEventActionPayload): Promise<any> => {
+  public genericEventActionActionList = (payload?: GenericEventActionPayload): Promise<any> => {
     return new Promise((resolve, reject) => {
       // all parameters are optional, we must first declare variables, and check empty payload.query
       let action: string;

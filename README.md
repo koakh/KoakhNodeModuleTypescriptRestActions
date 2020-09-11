@@ -1,103 +1,62 @@
 # README
 
 - [based on repo](https://github.com/koakh/KoakhNodeModuleTypescriptStarter)
+- [github](https://github.com/koakh/KoakhNodeModuleTypescriptRestActions.git)
+- [npm](https://www.npmjs.com/package/@koakh/typescript-rest-actions-api)
 
-## Use APi
+## Description
 
-bellow example use default `ACTION_ACTION_LIST` and `ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC` module actions
+a simple rest endpoint implementing koakh ACTION's pattern, useful to have only a http endpoint with unlimited self documented ACTION's
+
+## Checkout sample project
+
+```shell
+$ npm i
+```
+
+## Create a simple node Express Application
+
+1. add dependency with `npm i @koakh/typescript-rest-actions-api`
+2. bootStrap `actions`/`genericActionsService`  in `app.ts`
 
 ```typescript
-const resActionList: any = await this.actionsService.processAction(GenericEventAction.ACTION_ACTION_LIST)
-  .catch((error) => App.log(LogLevel.ERROR, error));
-```
+import { ActionBaseInterface, GenericActions as GenericActionService, GenericEventAction, GenericShellExecCommandPayload } from '@koakh/typescript-rest-actions-api';
 
-```json
-[
-  {
-    "action": "ACTION_ACTION_LIST",
-    "parameters": [
-      {
-        "required": false,
-        "type": "action",
-        "description": "action ex.: ACTION_CLIENT_STATUS",
-        "name": "action"
-      }
-    ]
-  },
-  {
-    "action": "ACTION_CONSOLE_LOG",
-    "body": {
-      "required": true,
-      "description": "just a test console log action",
-      "example": "body: {'pwd'} | body: {['pwd', 'ls -la']}"
-    }
-  },
-  {
-    "action": "ACTION_ACK_OK"
-  },
-  {
-    "action": "ACTION_ACK_KO"
-  },
-  {
-    "action": "ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC",
-    "description": "Execute shell command(s) forwarding all stdio.",
-    "link": "https://www.npmjs.com/package/exec-sh#public-api",
-    "body": {
-      "required": true,
-      "description": "body can be a command or an array of commands",
-      "example": {
-        "singleCommand": {
-          "body": "sudo service backend status"
-        },
-        "multipleCommands": {
-          "body": [
-            "sudo service openvpn status",
-            "sudo service sshd status"
-          ]
-        }
-      }
-    }
-  }
-]
-```
-
-const resShellExec: any = await this.actionsService.processAction(GenericEventAction.ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC, payload)
-  .catch((error) => App.log(LogLevel.ERROR, error));
-```
-
-```typescript
-import { GenericActions, GenericEventAction, GenericEventActionPayload } from '@koakh/typescript-rest-actions-api';
-
-export class MainServer {
-  private httpServer: http.Server;
-  private httpsServer: https.Server;
-  private actionsService: GenericActions;
-
-  constructor(private expressApp: Application) {
+export class App {
+  ...
+  private genericActionsService: GenericActionService;
+  ...
+  constructor() {
+    // init express server
+    this.expressApp = express();
+    ...
+    // init genericActions
     this.initGenericActions();
-  }
+    // setup main http server
+    this.mainServer = new MainServer(this.expressApp);
+    // services
+    this.mainService = new MainService(this.db, this.mainServer);
+    this.actionService = new ActionService(this.db, this.mainServer, this.genericActionsService, this.mainService);
+    // controllers
+    this.mainController = new MainController(this.mainService);
+    this.actionController = new ActionController(this.actionService);
+    // routes
+    this.mainRoute = new MainRoute(this.expressApp, this.mainController, this.actionController, this.multerMiddleware);
+  }  
+
+  ...
 
   private async initGenericActions() {
-    // init service
-    this.actionsService = new GenericActions();
-
-    // test actionList
-    const resActionList: any = await this.actionsService.processAction(GenericEventAction.ACTION_ACTION_LIST)
-      .catch((error) => App.log(LogLevel.ERROR, error));
-    App.log(LogLevel.DEBUG, resActionList);
-
-    // test shellExec
-    const payload: GenericEventActionPayload = {
-      body: {
-        cmd: 'service',
-        args: ['sshd', 'status'],
-        cwd: null,
-        showLog: true,
-      },
-    };
-    const resShellExec: any = await this.actionsService.processAction(GenericEventAction.ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC, payload)
-      .catch((error) => App.log(LogLevel.ERROR, error));
-    App.log(LogLevel.DEBUG, resShellExec);
+    // prepare local consumer actions service to pass to GenericActionService constructor
+    const systemDActionService: SystemActionService = new SystemActionService();
+    const actionsServices: ActionBaseInterface[] = [systemDActionService];
+    // select module actions and combine it with local consumer actions
+    const combinedGenericEventActions = [
+      GenericEventAction.ACTION_ACTION_LIST,
+      ...Object.keys(GenericEventActionLocal),
+    ];
+    // construct GenericActionService with local action services
+    this.genericActionsService = new GenericActionService(actionsServices, combinedGenericEventActions, false);
   }
-}
+  ...
 ```

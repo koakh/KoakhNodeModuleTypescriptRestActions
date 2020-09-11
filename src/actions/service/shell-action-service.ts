@@ -39,21 +39,6 @@ export class ShellActionService extends ActionBaseClass {
     this.combineActions();
   }
 
-  // TODO is used?
-  /**
-   * helper to get error message from execShPromise
-   */
-  // private getExecShErrorMessage(error) {
-  //   // send error callback
-  //   if (error.stderr) {
-  //     return error.stderr;
-  //   } else if (error.message) {
-  //     return error.message;
-  //   } else {
-  //     return error;
-  //   }
-  // }
-
   /**
    * ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC
    */
