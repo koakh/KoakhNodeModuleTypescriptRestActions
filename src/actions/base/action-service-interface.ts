@@ -1,5 +1,5 @@
 
 export interface ActionServiceInterface {
-  initGenericEvenActionMap();
-  initGenericEventActionMapAll();  
+  initGenericEvenActionMap(): void;
+  initGenericEventActionMapAll(): void;
 }

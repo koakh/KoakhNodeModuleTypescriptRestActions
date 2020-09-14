@@ -1,4 +1,4 @@
-import { spawn, ChildProcessWithoutNullStreams } from "child_process";
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 
 export interface ExecShellCommandResponse {
   code?: number;
@@ -32,7 +32,7 @@ export const execShellCommand = (cmd: string, args: string[] = [], cwd: string =
     // signal variable is null when the child process exits normally
     child.on('exit', (code: number, signal: NodeJS.Signals) => {
       // inner function: transform into array and sanitize strings
-      const output = (input) => input.toString().trim().split('\n').map((e) => e.trim().toLocaleLowerCase());
+      const output = (input: any) => input.toString().trim().split('\n').map((e: string) => e.trim().toLocaleLowerCase());
       if (code > 0) {
         reject({ code, stderr: output(stderr) });
       } else {

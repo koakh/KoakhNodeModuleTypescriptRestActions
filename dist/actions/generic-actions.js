@@ -58,7 +58,7 @@ class GenericActions {
             }
         };
         /**
-         * ACTION_ACTION_LIST
+         * ACTION_ACTION_LIST: public exposed to docs api
          */
         this.genericEventActionActionList = (payload) => {
             return new Promise((resolve, reject) => {

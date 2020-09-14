@@ -55,7 +55,7 @@ export const isTrue = (value: string): boolean => {
  * compare 2 arrays
  * return true if they are "the same"
  */
-export const listsAreEqual = (list1, list2) => {
+export const listsAreEqual = (list1: [], list2: []) => {
   if (!list1 || !list2) return false;
   if (list1.length !== list2.length) return false;
 

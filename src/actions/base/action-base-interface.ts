@@ -10,7 +10,7 @@ export interface ActionBaseInterface {
   // functions
   getActions(): Map<string, GenericEventActionMapObject>;
   // combine all actions into final genericEventActionMapAll
-  combineActions();
+  combineActions(): void;
   // test action stub
-  genericEventActionNotImplemented(payload: GenericEventActionPayload);
+  genericEventActionNotImplemented(payload: GenericEventActionPayload): void;
 }
