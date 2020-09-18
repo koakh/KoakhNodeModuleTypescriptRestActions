@@ -34,10 +34,12 @@ export class BaseActionService extends ActionBaseClass {
         }
       }],
       [GenericEventAction.ACTION_ACK_OK, {
-        func: this.genericEventActionAckOk
+        func: this.genericEventActionAckOk,
+        description: 'no description',
       }],
       [GenericEventAction.ACTION_ACK_KO, {
-        func: this.genericEventActionAckKo
+        func: this.genericEventActionAckKo,
+        description: 'no description',
       }],
     ]);
   }

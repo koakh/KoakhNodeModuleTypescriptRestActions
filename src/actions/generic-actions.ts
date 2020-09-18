@@ -33,6 +33,8 @@ export class GenericActions {
     // init actions
     this.initGenericEventActionMapActions();
     this.initGenericEventActionMapAll();
+    // check filtered consumer apps here, after both inits, BOTH must have some length of actions
+    // console.log('this.genericEventActionMapAll', JSON.stringify(this.genericEventActionMapAll, undefined, 2));
   }
 
   /**
@@ -41,11 +43,11 @@ export class GenericActions {
    */
   public processAction(action: string, payload?: GenericEventActionPayload, callback?: (args: ProcessActionCallbackArguments) => void): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      // start getting GenericEventAction enum
-      const genericEventAction = this.getGenericEventActionKey(action);
-      // get actionMapObject from genericEventActionMapAll
-      const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
       try {
+        // start getting GenericEventAction enum
+        const genericEventAction = this.getGenericEventActionKey(action);
+        // get actionMapObject from genericEventActionMapAll
+        const actionMapObject: GenericEventActionMapObject = this.genericEventActionMapAll.get(genericEventAction);
         if (action && genericEventAction && actionMapObject && !actionMapObject.disabled) {
           // get function implementation
           const actionFunction: GenericEventActionFunction = actionMapObject.func;
@@ -65,8 +67,6 @@ export class GenericActions {
           if (actionFunction) {
             // call actionFunction implementation: error delegated to catch
             const result = await actionFunction(payload);
-            // fire callback
-            if (callback && actionMapObject.fireEvent) callback({ action, payload, result });
             // else resolve promise
             resolve(result);
           } else {
@@ -78,24 +78,35 @@ export class GenericActions {
           throw new Error(`invalid or disabled action '${action}' or payload...check if '${action}' is implemented and is enabled`);
         }
       } catch (error) {
-        // fire callback
-        if (callback && actionMapObject.fireEvent) callback({ action, payload, error });
         reject(error);
       }
     })
   };
 
+  /**
+   * function to check if consumer app has key, used to filter consumer actions in initGenericEventActionMapActions and initGenericEventActionMapAll methods
+   * @param key action key ex ACTION_ACTION_LIST
+   */
+  private consumerHasKey = (key) => this.consumerEventActions.includes(key);
+
+  /**
+   * combine localActionKeys and consumerEventActions into final genericEventActionMapActions
+   */
   private initGenericEventActionMapActions() {
     // add local modules actions
     const localActionKeys = Object.keys(GenericEventAction);
     if (localActionKeys) {
       localActionKeys.forEach((e) => {
-        this.genericEventActionMapActions.set(e, e);
+        // add action if consumer app has key or is ACTION_ACTION_LIST
+        if (this.consumerHasKey(e) || e === GenericEventAction.ACTION_ACTION_LIST) {
+          this.genericEventActionMapActions.set(e, e);
+        }
       });
     };
     // add consumer/external module actions
     if (this.consumerEventActions) {
       this.consumerEventActions.forEach((e) => {
+        // always add all consumer actions
         this.genericEventActionMapActions.set(e, e);
       });
     }
@@ -107,7 +118,7 @@ export class GenericActions {
       [GenericEventAction.ACTION_ACTION_LIST, {
         func: this.genericEventActionActionList,
         parameters: new Map<string, GenericEventActionParameter>([
-          ['action', { required: false, type: GenericEventActionParameterType.ACTION, description: 'action ex.: ACTION_CLIENT_STATUS' }],
+          ['action', { required: false, type: GenericEventActionParameterType.ACTION, description: 'action ex.: ACTION_ACTION_LIST' }],
         ]),
       }],
     ]);
@@ -115,7 +126,7 @@ export class GenericActions {
     // common actions for all clients: push local genericEventActionMap
     this.genericEventActionMapArray.push(genericEventActionMap);
 
-    // common baseActions
+    // common baseActions: passed by consumer module apps
     if (this.initBaseActions && this.initBaseActions === true) {
       const actionsBase: BaseActionService = new BaseActionService(this.getGenericEventActionKey);
       this.genericEventActionMapArray.push(actionsBase.getActions());
@@ -129,9 +140,17 @@ export class GenericActions {
     // do some magic and combine actions in genericEventActionMapArray into final genericEventActionMapAll, the one that is used
     // and finish the combination of local, common, and specific clientTypes actions
     this.genericEventActionMapArray.forEach((e: Map<string, GenericEventActionMapObject>) => {
+      // extract array and filter consumer apps
+      const genericEventActionMapAllArray = Array.from(this.genericEventActionMapAll.entries()).filter((e) => {
+        // add action if consumer app has key or is ACTION_ACTION_LIST
+        return this.consumerHasKey(e[0]) || e[0] === GenericEventAction.ACTION_ACTION_LIST;
+      });
       this.genericEventActionMapAll = new Map<string, GenericEventActionMapObject>([
         // local map
-        ...Array.from(this.genericEventActionMapAll.entries()),
+        // non filtered with all actions
+        // ...Array.from(this.genericEventActionMapAll.entries()),
+        // filtered with only consumer actions
+        ...genericEventActionMapAllArray,
         // iterate map
         ...Array.from(e)
       ]);

@@ -18,6 +18,9 @@ class ActionBaseClass {
         // return combined all
         return this.genericEventActionMapAll;
     }
+    /**
+     * called from ActionBaseClass subclasses
+     */
     combineActions() {
         // unshift local genericEventActionMap into first position
         this.genericEventActionMapArray.unshift(this.genericEventActionMap);

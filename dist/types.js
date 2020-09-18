@@ -7,9 +7,8 @@ exports.GenericEventActionParameterType = exports.GenericEventAction = void 0;
 var GenericEventAction;
 (function (GenericEventAction) {
     // core actions
-    GenericEventAction["ACTION_NOT_IMPLEMENTED"] = "ACTION_NOT_IMPLEMENTED";
-    GenericEventAction["ACTION_CLIENT_STATUS"] = "ACTION_CLIENT_STATUS";
     GenericEventAction["ACTION_ACTION_LIST"] = "ACTION_ACTION_LIST";
+    GenericEventAction["ACTION_NOT_IMPLEMENTED"] = "ACTION_NOT_IMPLEMENTED";
     GenericEventAction["ACTION_CONSOLE_LOG"] = "ACTION_CONSOLE_LOG";
     GenericEventAction["ACTION_ACK_OK"] = "ACTION_ACK_OK";
     GenericEventAction["ACTION_ACK_KO"] = "ACTION_ACK_KO";

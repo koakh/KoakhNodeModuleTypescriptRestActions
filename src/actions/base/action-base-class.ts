@@ -13,6 +13,9 @@ export class ActionBaseClass implements ActionBaseInterface {
     return this.genericEventActionMapAll;
   }
 
+  /**
+   * called from ActionBaseClass subclasses
+   */
   public combineActions() {
     // unshift local genericEventActionMap into first position
     this.genericEventActionMapArray.unshift(this.genericEventActionMap);

@@ -80,10 +80,12 @@ class BaseActionService extends action_base_class_1.ActionBaseClass {
                     }
                 }],
             [types_1.GenericEventAction.ACTION_ACK_OK, {
-                    func: this.genericEventActionAckOk
+                    func: this.genericEventActionAckOk,
+                    description: 'no description',
                 }],
             [types_1.GenericEventAction.ACTION_ACK_KO, {
-                    func: this.genericEventActionAckKo
+                    func: this.genericEventActionAckKo,
+                    description: 'no description',
                 }],
         ]);
     }
