@@ -34,8 +34,8 @@ export class TemplateActionService extends ActionBaseClass {
    * ACTION_${SERVICE_NAME}_SERVICE_STUB
    */
   public genericEventActionServiceNameStub = (payload: GenericEventActionPayload) => {
-    return new Promise((reject) => {
+    return new Promise((_, reject) => {
       reject(new Error(NOT_IMPLEMENTED));
     })
-  };  
+  };
 }

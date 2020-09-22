@@ -83,14 +83,14 @@ class GenericActions {
                     }
                 }
                 try {
-                    const actionsPayload = [];
+                    const actionListResponsePayload = [];
                     // convert to array, and iterate over the entries
                     Array.from(this.genericEventActionMapAll.entries())
                         .forEach((entry) => {
                         // key: GenericEventAction, value:GenericEventActionFunction
                         const key = entry[0];
                         // inline destruct type entry[1]
-                        const { func, description, link, parameters, body, disabled } = entry[1];
+                        const { func, description, link, parameters, body, disabled, fireEvent } = entry[1];
                         // App.log(LogLevel.DEBUG, `key: ${key}, disabled: ${disabled}`);
                         // only add action if defined and not disabled, ex implemented, else we skip method to prevent un-implemented actions in list
                         // and if action is defined and equal to payload action
@@ -107,17 +107,19 @@ class GenericActions {
                                     return p[1];
                                 });
                             }
-                            actionsPayload.push({
+                            actionListResponsePayload.push({
                                 action: key,
                                 description: (description) ? description : undefined,
                                 link: (link) ? link : undefined,
+                                disabled: (disabled) ? disabled : undefined,
+                                fireEvent: (fireEvent) ? fireEvent : undefined,
                                 parameters: paramList,
                                 body: (body) ? body : undefined,
                             });
                         }
                     });
                     // execute action
-                    resolve(actionsPayload);
+                    resolve(actionListResponsePayload);
                 }
                 catch (error) {
                     reject(error);
@@ -134,7 +136,7 @@ class GenericActions {
      * processAction, this function will work with all implemented generic function actions, receive action and payload
      * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
      */
-    processAction(action, payload, callback) {
+    processAction(action, payload) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
                 // start getting GenericEventAction enum
@@ -207,6 +209,7 @@ class GenericActions {
         const genericEventActionMap = new Map([
             [types_1.GenericEventAction.ACTION_ACTION_LIST, {
                     func: this.genericEventActionActionList,
+                    description: 'main action to list all expose actions',
                     parameters: new Map([
                         ['action', { required: false, type: types_1.GenericEventActionParameterType.ACTION, description: 'action ex.: ACTION_ACTION_LIST' }],
                     ]),

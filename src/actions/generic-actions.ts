@@ -1,5 +1,5 @@
 // tslint:disable-next-line: max-line-length
-import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload, ProcessActionCallbackArguments } from '../types';
+import { GenericEventAction, GenericEventActionFunction, GenericEventActionListResponse, GenericEventActionMapObject, GenericEventActionParameter, GenericEventActionParameterType, GenericEventActionPayload } from '../types';
 import { ActionBaseInterface } from './base/action-base-interface';
 import { BaseActionService } from './service/base-action-service';
 
@@ -41,7 +41,7 @@ export class GenericActions {
    * processAction, this function will work with all implemented generic function actions, receive action and payload
    * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
    */
-  public processAction(action: string, payload?: GenericEventActionPayload, callback?: (args: ProcessActionCallbackArguments) => void): Promise<any> {
+  public processAction(action: string, payload?: GenericEventActionPayload): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         // start getting GenericEventAction enum
@@ -87,7 +87,7 @@ export class GenericActions {
    * function to check if consumer app has key, used to filter consumer actions in initGenericEventActionMapActions and initGenericEventActionMapAll methods
    * @param key action key ex ACTION_ACTION_LIST
    */
-  private consumerHasKey = (key) => this.consumerEventActions.includes(key);
+  private consumerHasKey = (key: string) => this.consumerEventActions.includes(key);
 
   /**
    * combine localActionKeys and consumerEventActions into final genericEventActionMapActions
@@ -117,6 +117,7 @@ export class GenericActions {
     const genericEventActionMap = new Map<string, GenericEventActionMapObject>([
       [GenericEventAction.ACTION_ACTION_LIST, {
         func: this.genericEventActionActionList,
+        description: 'main action to list all expose actions',
         parameters: new Map<string, GenericEventActionParameter>([
           ['action', { required: false, type: GenericEventActionParameterType.ACTION, description: 'action ex.: ACTION_ACTION_LIST' }],
         ]),
@@ -222,7 +223,7 @@ export class GenericActions {
   /**
    * ACTION_ACTION_LIST: public exposed to docs api
    */
-  public genericEventActionActionList = (payload?: GenericEventActionPayload): Promise<any> => {
+  public genericEventActionActionList = (payload?: GenericEventActionPayload): Promise<GenericEventActionListResponse[]> => {
     return new Promise((resolve, reject) => {
       // all parameters are optional, we must first declare variables, and check empty payload.query
       let action: string;
@@ -241,14 +242,14 @@ export class GenericActions {
       }
 
       try {
-        const actionsPayload: GenericEventActionListResponse[] = [];
+        const actionListResponsePayload: GenericEventActionListResponse[] = [];
         // convert to array, and iterate over the entries
         Array.from(this.genericEventActionMapAll.entries())
           .forEach((entry) => {
             // key: GenericEventAction, value:GenericEventActionFunction
             const key = entry[0];
             // inline destruct type entry[1]
-            const { func, description, link, parameters, body, disabled }: GenericEventActionMapObject = entry[1];
+            const { func, description, link, parameters, body, disabled, fireEvent }: GenericEventActionMapObject = entry[1];
             // App.log(LogLevel.DEBUG, `key: ${key}, disabled: ${disabled}`);
             // only add action if defined and not disabled, ex implemented, else we skip method to prevent un-implemented actions in list
             // and if action is defined and equal to payload action
@@ -265,10 +266,12 @@ export class GenericActions {
                   return p[1];
                 });
               }
-              actionsPayload.push({
+              actionListResponsePayload.push({
                 action: key,
                 description: (description) ? description : undefined,
                 link: (link) ? link : undefined,
+                disabled: (disabled) ? disabled : undefined,
+                fireEvent: (fireEvent) ? fireEvent : undefined,
                 parameters: paramList,
                 body: (body) ? body : undefined,
               });
@@ -276,7 +279,7 @@ export class GenericActions {
           });
 
         // execute action
-        resolve(actionsPayload);
+        resolve(actionListResponsePayload);
       } catch (error) {
         reject(error);
       }

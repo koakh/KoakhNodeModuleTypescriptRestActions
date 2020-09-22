@@ -14,7 +14,7 @@ class TemplateActionService extends action_base_class_1.ActionBaseClass {
          * ACTION_${SERVICE_NAME}_SERVICE_STUB
          */
         this.genericEventActionServiceNameStub = (payload) => {
-            return new Promise((reject) => {
+            return new Promise((_, reject) => {
                 reject(new Error(generic_actions_1.NOT_IMPLEMENTED));
             });
         };

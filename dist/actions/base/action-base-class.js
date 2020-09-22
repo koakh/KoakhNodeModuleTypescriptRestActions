@@ -9,7 +9,7 @@ class ActionBaseClass {
         this.genericEventActionMapAll = new Map();
         // common function to test actions
         this.genericEventActionNotImplemented = (payload) => {
-            return new Promise((reject) => {
+            return new Promise((_, reject) => {
                 reject(new Error(generic_actions_1.NOT_IMPLEMENTED));
             });
         };

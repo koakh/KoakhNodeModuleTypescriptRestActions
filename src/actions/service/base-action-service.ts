@@ -21,6 +21,7 @@ export class BaseActionService extends ActionBaseClass {
       // test client events
       [GenericEventAction.ACTION_CONSOLE_LOG, {
         func: this.genericEventActionConsoleLog,
+        description: 'a basic action to write some stuff on console',
         body: {
           required: true,
           description: 'just a test console log action',
@@ -35,11 +36,11 @@ export class BaseActionService extends ActionBaseClass {
       }],
       [GenericEventAction.ACTION_ACK_OK, {
         func: this.genericEventActionAckOk,
-        description: 'no description',
+        description: 'a basic action with a OK result',
       }],
       [GenericEventAction.ACTION_ACK_KO, {
         func: this.genericEventActionAckKo,
-        description: 'no description',
+        description: 'a basic action to test exception error, returning a KO result',
       }],
     ]);
   }

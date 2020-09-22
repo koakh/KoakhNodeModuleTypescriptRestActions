@@ -67,6 +67,7 @@ class BaseActionService extends action_base_class_1.ActionBaseClass {
             // test client events
             [types_1.GenericEventAction.ACTION_CONSOLE_LOG, {
                     func: this.genericEventActionConsoleLog,
+                    description: 'a basic action to write some stuff on console',
                     body: {
                         required: true,
                         description: 'just a test console log action',
@@ -81,11 +82,11 @@ class BaseActionService extends action_base_class_1.ActionBaseClass {
                 }],
             [types_1.GenericEventAction.ACTION_ACK_OK, {
                     func: this.genericEventActionAckOk,
-                    description: 'no description',
+                    description: 'a basic action with a OK result',
                 }],
             [types_1.GenericEventAction.ACTION_ACK_KO, {
                     func: this.genericEventActionAckKo,
-                    description: 'no description',
+                    description: 'a basic action to test exception error, returning a KO result',
                 }],
         ]);
     }

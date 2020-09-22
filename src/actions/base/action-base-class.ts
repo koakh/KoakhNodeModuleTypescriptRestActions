@@ -33,7 +33,7 @@ export class ActionBaseClass implements ActionBaseInterface {
 
   // common function to test actions
   public genericEventActionNotImplemented = (payload: GenericEventActionPayload) => {
-    return new Promise((reject) => {
+    return new Promise((_, reject) => {
       reject(new Error(NOT_IMPLEMENTED));
     })
   };

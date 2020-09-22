@@ -71,10 +71,11 @@ export interface GenericEventActionMapObject {
   func: GenericEventActionFunction;
   description?: string;
   link?: string;
+  disabled?: boolean;
+  // when enable it fire the event, use use that event for ex for audit
+  fireEvent?: boolean;
   parameters?: Map<string, GenericEventActionParameter>;
   body?: GenericEventActionBody;
-  disabled?: boolean;
-  fireEvent?: boolean;
 }
 
 // used in actionList response payload
@@ -82,8 +83,8 @@ export interface GenericEventActionListResponse {
   action: string;
   description?: string;
   link?: string;
+  disabled?: boolean;
+  fireEvent?: boolean;
   parameters?: GenericEventActionParameter[];
   body?: GenericEventActionBody;
 }
-
-export type ProcessActionCallbackArguments = {action: string, payload: any, result?: any, error?: Error};
