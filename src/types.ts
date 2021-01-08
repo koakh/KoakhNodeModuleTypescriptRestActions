@@ -8,7 +8,7 @@ export interface GenericEventActionMap {
 /**
  * GenericEventAction enums
  */
- export enum GenericEventAction {
+export enum GenericEventAction {
   // core actions
   ACTION_ACTION_LIST = 'ACTION_ACTION_LIST',
   ACTION_NOT_IMPLEMENTED = 'ACTION_NOT_IMPLEMENTED',
