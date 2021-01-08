@@ -1,6 +1,8 @@
 import { GenericEventAction, GenericEventActionMapObject, GenericEventActionPayload } from '../../types';
 import { ActionBaseClass } from '../base/action-base-class';
 import { NOT_IMPLEMENTED } from '../generic-actions';
+// change to local GenericEventAction after create GenericEventAction.ACTION ENUM
+// import { GenericEventAction } from '../../types';
 
 /**
  * serve has a base template for clientType actions actions/client-type/* and service actions actions/service/*
