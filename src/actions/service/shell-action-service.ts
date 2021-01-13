@@ -12,7 +12,7 @@ export class ShellActionService extends ActionBaseClass {
   // init local module actions
   public initGenericEvenActionMap() {
     this.genericEventActionMap = new Map<GenericEventAction, GenericEventActionMapObject>([
-      [GenericEventAction.ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC, {
+      [GenericEventAction.ACTION_SYSTEM_SHELL_GENERIC_EXEC, {
         func: this.genericEventActionShellGenericShellExec,
         description: 'Execute shell command(s) forwarding all stdio, stderr',
         body: {
@@ -40,7 +40,7 @@ export class ShellActionService extends ActionBaseClass {
   }
 
   /**
-   * ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC
+   * ACTION_SYSTEM_SHELL_GENERIC_EXEC
    */
   private genericEventActionShellGenericShellExec = (payload: GenericEventActionPayload): Promise<ExecShellCommandResponse> => {
     return new Promise(async (resolve, reject) => {

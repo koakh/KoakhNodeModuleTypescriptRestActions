@@ -4,6 +4,8 @@ exports.TemplateActionService = void 0;
 const types_1 = require("../../types");
 const action_base_class_1 = require("../base/action-base-class");
 const generic_actions_1 = require("../generic-actions");
+// change to local GenericEventAction after create GenericEventAction.ACTION ENUM
+// import { GenericEventAction } from '../../types';
 /**
  * serve has a base template for clientType actions actions/client-type/* and service actions actions/service/*
  */

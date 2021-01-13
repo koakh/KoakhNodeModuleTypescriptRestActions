@@ -30,7 +30,7 @@ class GenericActionsShellService extends action_base_class_1.ActionBaseClass {
             }));
         };
         /**
-         * ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC
+         * ACTION_SYSTEM_SHELL_GENERIC_EXEC
          */
         this.genericEventActionShellGenericShellExec = (payload) => {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
@@ -52,7 +52,7 @@ class GenericActionsShellService extends action_base_class_1.ActionBaseClass {
     // init local module actions
     initGenericEvenActionMap() {
         this.genericEventActionMap = new Map([
-            [types_1.GenericEventAction.ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC, {
+            [types_1.GenericEventAction.ACTION_SYSTEM_SHELL_GENERIC_EXEC, {
                     func: this.genericEventActionShellGenericShellExec,
                     description: 'Execute shell command(s) forwarding all stdio.',
                     link: 'https://www.npmjs.com/package/exec-sh#public-api',

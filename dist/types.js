@@ -13,11 +13,11 @@ var GenericEventAction;
     GenericEventAction["ACTION_ACK_OK"] = "ACTION_ACK_OK";
     GenericEventAction["ACTION_ACK_KO"] = "ACTION_ACK_KO";
     // service actions: shell
-    GenericEventAction["ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC"] = "ACTION_SHELL_SERVICE_GENERIC_SHELL_EXEC";
+    GenericEventAction["ACTION_SYSTEM_SHELL_GENERIC_EXEC"] = "ACTION_SYSTEM_SHELL_GENERIC_EXEC";
     // disabled actions
-    GenericEventAction["ACTION_SHELL_SERVICE_ENABLE_TUNNELS"] = "ACTION_SHELL_SERVICE_ENABLE_TUNNELS";
-    GenericEventAction["ACTION_SHELL_SERVICE_DISABLE_TUNNELS"] = "ACTION_SHELL_SERVICE_DISABLE_TUNNELS";
-    GenericEventAction["ACTION_SHELL_SERVICE_TUNNELS_STATUS"] = "ACTION_SHELL_SERVICE_TUNNELS_STATUS";
+    GenericEventAction["ACTION_SYSTEM_SERVICE_TUNNEL_ENABLE"] = "ACTION_SYSTEM_SERVICE_TUNNEL_ENABLE";
+    GenericEventAction["ACTION_SYSTEM_SERVICE_TUNNEL_DISABLE"] = "ACTION_SYSTEM_SERVICE_TUNNEL_DISABLE";
+    GenericEventAction["ACTION_SYSTEM_SERVICE_TUNNEL_STATUS"] = "ACTION_SYSTEM_SERVICE_TUNNEL_STATUS";
 })(GenericEventAction = exports.GenericEventAction || (exports.GenericEventAction = {}));
 var GenericEventActionParameterType;
 (function (GenericEventActionParameterType) {
