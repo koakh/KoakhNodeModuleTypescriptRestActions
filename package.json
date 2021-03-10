@@ -6,7 +6,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npx tsc",
     "dev": "ts-node-dev --respawn -- src/index.ts",
     "--- patch": "patch/update readme, and inc version, if used with publish enters in bootLoop",
     "patch": "npm version patch",

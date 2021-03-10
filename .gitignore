@@ -1,6 +1,5 @@
 # Git Ignore base node.js .gitignore file
 
-```ini
 # shell
 logs
 *.log
@@ -80,4 +79,6 @@ typings/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-```
+
+# custom
+dist/

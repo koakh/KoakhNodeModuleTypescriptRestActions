@@ -18,15 +18,12 @@ export enum GenericEventAction {
   ACTION_ACK_KO = 'ACTION_ACK_KO',
   // service actions: shell
   ACTION_SYSTEM_SHELL_GENERIC_EXEC = 'ACTION_SYSTEM_SHELL_GENERIC_EXEC',
-  // disabled actions
-  ACTION_SYSTEM_SERVICE_TUNNEL_ENABLE = 'ACTION_SYSTEM_SERVICE_TUNNEL_ENABLE',
-  ACTION_SYSTEM_SERVICE_TUNNEL_DISABLE = 'ACTION_SYSTEM_SERVICE_TUNNEL_DISABLE',
-  ACTION_SYSTEM_SERVICE_TUNNEL_STATUS = 'ACTION_SYSTEM_SERVICE_TUNNEL_STATUS',
 }
 
 export enum GenericEventActionParameterType {
   STRING = 'string',
   NUMBER = 'number',
+  BOOLEAN = 'boolean',
   ARRAY = 'array',
   OBJECT = 'object',
   ACTION = 'action',
