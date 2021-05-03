@@ -60,7 +60,7 @@ export class GenericActions {
           // validate body, check if has body is a required property, and if payload has body property
           if ((actionMapObject && actionMapObject.body && actionMapObject.body.required) && (!payload || (payload && !payload.body))) {
             // delegate to catch
-            const bodyExample: string = (actionMapObject.body.example) ? `. ex.: { body: ${actionMapObject.body.example} }` : '.';
+            const bodyExample: string = (actionMapObject.body.example) ? `. ex.: ${JSON.stringify(actionMapObject.body.example)}` : '.';
             throw new Error(`${MISSING_BODY}${bodyExample}`);
           }
           // fire actionFunction if pass validateParameters, and validateBody
