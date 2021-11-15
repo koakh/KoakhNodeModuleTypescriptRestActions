@@ -14,9 +14,9 @@ export interface ExecShellCommandResponse {
  * @param {*} cwd ex.: /var/lib/c3apps/folderId
  * @param {*} showLog 
  */
-export const execShellCommand = (cmd: string, args: string[] = [], cwd: string = null, showLog: boolean = false): Promise<ExecShellCommandResponse> => new Promise((resolve, reject) => {
+export const execShellCommand = (cmd: string, args: string[] = [], cwd: string = null, env?: NodeJS.ProcessEnv, showLog: boolean = false): Promise<ExecShellCommandResponse> => new Promise((resolve, reject) => {
   try {
-    const child: ChildProcessWithoutNullStreams = spawn(cmd, args, { cwd });
+    const child: ChildProcessWithoutNullStreams = spawn(cmd, args, { cwd, env });
     child.stdin.setDefaultEncoding('utf-8');
     let stdout = '';
     let stderr = '';
