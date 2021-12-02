@@ -8,7 +8,7 @@ import { ShellActionService } from './shell-action-service';
 export class BaseActionService extends ActionBaseClass {
 
   constructor(
-    public getGenericEventActionKey: (action: string) => string
+    private getGenericEventActionKey: (action: string) => string
   ) {
     super();
     this.initGenericEvenActionMap();

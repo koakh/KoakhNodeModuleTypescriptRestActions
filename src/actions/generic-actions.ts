@@ -37,6 +37,13 @@ export class GenericActions {
     // console.log('this.genericEventActionMapAll', JSON.stringify(this.genericEventActionMapAll, undefined, 2));
   }
 
+  public getActionObject(action: string): GenericEventActionMapObject {
+    // start getting GenericEventAction enum
+    const genericEventAction = this.getGenericEventActionKey(action);
+    // get actionMapObject from genericEventActionMapAll
+    return this.genericEventActionMapAll.get(genericEventAction);
+  }
+
   /**
    * processAction, this function will work with all implemented generic function actions, receive action and payload
    * @param action arbitrary string action, must be a valid GenericEventAction and have a valid implementation of GenericEventActionFunction
@@ -205,7 +212,7 @@ export class GenericActions {
    * returns GenericEventAction string or throw error on invalid action sent by user
    * @param action the action that was sent from client
    */
-  public getGenericEventActionKey = (action: string): string => {
+  private getGenericEventActionKey = (action: string): string => {
     try {
       // check if valid action an exception if not
       const eventAction = this.genericEventActionMapActions.get(action);
