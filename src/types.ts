@@ -72,6 +72,7 @@ export interface GenericEventActionMapObject {
   disabled?: boolean;
   // when enable it fire the event, use use that event for ex for audit
   fireEvent?: boolean;
+  auditAction?: boolean;
   parameters?: Map<string, GenericEventActionParameter>;
   body?: GenericEventActionBody;
 }
@@ -83,6 +84,7 @@ export interface GenericEventActionListResponse {
   link?: string;
   disabled?: boolean;
   fireEvent?: boolean;
+  auditAction?: boolean;
   parameters?: GenericEventActionParameter[];
   body?: GenericEventActionBody;
 }

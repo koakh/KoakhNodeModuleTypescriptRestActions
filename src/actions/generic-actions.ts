@@ -249,7 +249,7 @@ export class GenericActions {
             // key: GenericEventAction, value:GenericEventActionFunction
             const key = entry[0];
             // inline destruct type entry[1]
-            const { func, description, link, parameters, body, disabled, fireEvent }: GenericEventActionMapObject = entry[1];
+            const { func, description, link, parameters, body, disabled, fireEvent, auditAction }: GenericEventActionMapObject = entry[1];
             // App.log(LogLevel.DEBUG, `key: ${key}, disabled: ${disabled}`);
             // only add action if defined and not disabled, ex implemented, else we skip method to prevent un-implemented actions in list
             // and if action is defined and equal to payload action
@@ -272,6 +272,7 @@ export class GenericActions {
                 link: (link) ? link : undefined,
                 disabled: (disabled) ? disabled : undefined,
                 fireEvent: (fireEvent) ? fireEvent : undefined,
+                auditAction: (auditAction) ? auditAction : undefined,
                 parameters: paramList,
                 body: (body) ? body : undefined,
               });
