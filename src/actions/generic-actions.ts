@@ -205,7 +205,7 @@ export class GenericActions {
    * returns GenericEventAction string or throw error on invalid action sent by user
    * @param action the action that was sent from client
    */
-  private getGenericEventActionKey = (action: string): string => {
+  public getGenericEventActionKey = (action: string): string => {
     try {
       // check if valid action an exception if not
       const eventAction = this.genericEventActionMapActions.get(action);
