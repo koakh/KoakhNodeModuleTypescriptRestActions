@@ -42,11 +42,13 @@ export const execShellCommand = (cmd: string, args: string[] = [], cwd: string =
       // if (showLog) console.info(`child process exited with code ${code} and signal ${signal}`);
     });
     child.stdout.on('data', (data) => {
-      if (showLog) console.info(`child stdout:\n${data}`);
+      // if (showLog) console.info(`child stdout:\n${data}`);
+      if (showLog) console.info(data);
       stdout += data;
     });
     child.stderr.on('data', (data) => {
-      if (showLog) console.info(`child stderr:\n${data}`);
+      // if (showLog) console.info(`child stderr:\n${data}`);
+      if (showLog) console.info(data);
       stderr += data;
     });
   } catch (error) {
