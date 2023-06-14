@@ -43,12 +43,12 @@ export const execShellCommand = (cmd: string, args: string[] = [], cwd: string =
     });
     child.stdout.on('data', (data) => {
       // if (showLog) console.info(`child stdout:\n${data}`);
-      if (showLog) console.info(data);
+      if (showLog) console.info(data.toString());
       stdout += data;
     });
     child.stderr.on('data', (data) => {
       // if (showLog) console.info(`child stderr:\n${data}`);
-      if (showLog) console.error(data);
+      if (showLog) console.error(data.toString());
       stderr += data;
     });
   } catch (error) {
