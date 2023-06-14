@@ -48,7 +48,7 @@ export const execShellCommand = (cmd: string, args: string[] = [], cwd: string =
     });
     child.stderr.on('data', (data) => {
       // if (showLog) console.info(`child stderr:\n${data}`);
-      if (showLog) console.info(data);
+      if (showLog) console.error(data);
       stderr += data;
     });
   } catch (error) {
